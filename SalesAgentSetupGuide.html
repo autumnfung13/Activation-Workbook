@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentforce Sales Agent: Co-Build Workshop Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sf-blue: #0070D2;
+      --sf-dark: #032D60;
+      --sf-light: #F3F8FE;
+      --sf-border: #D8E6F8;
+      --sf-text: #16325C;
+      --sf-muted: #54698D;
+      --sf-green: #2E844A;
+      --sf-green-bg: #EFF7F0;
+      --sf-yellow-bg: #FEF9EC;
+      --sf-yellow-border: #F2CF5B;
+      --sf-note-bg: #EAF4FF;
+    }
+
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F0F4F9;
+      color: var(--sf-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--sf-dark);
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    header .logo {
+      width: 28px; height: 28px;
+      background: white;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    header h1 { font-size: 17px; font-weight: 600; color: white; }
+
+    header .badge {
+      margin-left: auto;
+      background: var(--sf-blue);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .shell-body {
+      display: flex;
+      flex: 1;
+      align-items: flex-start;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: 280px;
+      flex-shrink: 0;
+      background: white;
+      border-right: 1px solid var(--sf-border);
+      padding: 16px 0 40px;
+      position: sticky;
+      top: 0;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      align-self: flex-start;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sf-muted);
+      padding: 12px 16px 5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      color: var(--sf-muted);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .nav-item:hover { background: var(--sf-light); color: var(--sf-blue); }
+
+    .nav-item.active {
+      background: var(--sf-light);
+      color: var(--sf-blue);
+      border-left-color: var(--sf-blue);
+      font-weight: 600;
+    }
+
+    .nav-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--sf-border);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .nav-item.active .nav-dot { background: var(--sf-blue); }
+
+    .nav-section-group { margin-bottom: 4px; }
+
+    .nav-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      background: var(--sf-light);
+      border-bottom: 1px solid var(--sf-border);
+    }
+
+    .nav-section-num {
+      width: 22px; height: 22px;
+      background: var(--sf-dark);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .nav-section-num.appendix { background: var(--sf-muted); font-size: 10px; }
+
+    /* ── Main Stage ── */
+    .stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap {
+      background: white;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--sf-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sf-blue), #00A0E3);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--sf-muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    /* ── Card area ── */
+    .card-area {
+      flex: 1;
+      padding: 24px 20px 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Section breadcrumb */
+    .breadcrumb {
+      width: 100%;
+      max-width: 1020px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--sf-muted);
+    }
+
+    .breadcrumb .section-pill {
+      background: var(--sf-dark);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .breadcrumb .sep { opacity: 0.4; }
+
+    /* The card */
+    .card {
+      width: 100%;
+      max-width: 1020px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--sf-border);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      overflow: hidden;
+      display: none;
+    }
+
+    .card.visible { display: block; }
+
+    .card-body {
+      padding: 32px 36px;
+      min-height: 380px;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--sf-dark) 0%, #0a4a8a 100%);
+      padding: 26px 36px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .card-num {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .card-header-text h2 {
+      font-size: 23px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.3;
+    }
+
+    .card-header-text .sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 6px;
+    }
+
+    .th-link {
+      margin-left: auto;
+      align-self: flex-start;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .th-link:hover { background: rgba(255,255,255,0.28); }
+
+    /* Intro card special style */
+    .intro-card .card-header {
+      background: linear-gradient(135deg, var(--sf-dark) 0%, var(--sf-blue) 100%);
+      padding: 32px 36px;
+    }
+
+    .agent-chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+    .agent-chip {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+    }
+
+    /* ── Callouts ── */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      line-height: 1.6;
+    }
+
+    .callout-icon { flex-shrink: 0; font-size: 17px; margin-top: 1px; }
+
+    .callout.note    { background: var(--sf-note-bg); border-left: 4px solid var(--sf-blue); color: var(--sf-dark); }
+    .callout.warning { background: var(--sf-yellow-bg); border-left: 4px solid var(--sf-yellow-border); color: #6B4F00; }
+    .callout.success { background: var(--sf-green-bg); border-left: 4px solid var(--sf-green); color: #1B4D2E; }
+    .callout.prework { background: #F3F0FF; border-left: 4px solid #7B5EA7; color: #3E2166; }
+
+    /* ── Steps ── */
+    .section-intro {
+      font-size: 16px;
+      color: var(--sf-muted);
+      margin-bottom: 22px;
+      line-height: 1.65;
+    }
+
+    ol.steps { counter-reset: step; list-style: none; padding: 0; }
+
+    ol.steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 18px;
+      font-size: 16px;
+      align-items: flex-start;
+    }
+
+    ol.steps li::before {
+      content: counter(step);
+      min-width: 32px; height: 32px;
+      background: var(--sf-blue);
+      color: white;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    ol.steps li .step-content { flex: 1; padding-top: 4px; line-height: 1.6; }
+
+    ol.steps li ul { margin-top: 10px; padding-left: 18px; }
+
+    ol.steps li ul li {
+      display: list-item;
+      list-style: disc;
+      margin-bottom: 6px;
+      font-size: 15px;
+      color: var(--sf-muted);
+      counter-increment: none;
+    }
+
+    ol.steps li ul li::before { display: none; }
+
+    ol.steps.steps-interactive li::before { display: none; }
+    ol.steps.steps-interactive { counter-reset: none; }
+    ol.steps.steps-interactive li { counter-increment: none; }
+
+    /* ── Step checkboxes ── */
+    ol.steps li .step-check {
+      margin-top: 7px;
+      width: 18px; height: 18px;
+      accent-color: var(--sf-blue);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    ol.steps li.step-done .step-content,
+    ol.steps li.step-done .step-content * {
+      text-decoration: line-through;
+      opacity: 0.45;
+    }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 4px 0 16px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    thead tr { background: var(--sf-dark); color: white; }
+    thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+    tbody tr:nth-child(even) { background: var(--sf-light); }
+    tbody tr:hover { background: #E8F0FB; }
+    tbody td { padding: 12px 16px; border-bottom: 1px solid var(--sf-border); vertical-align: top; }
+    tbody td:last-child { text-align: center; font-size: 18px; }
+
+    .row-check {
+      width: 18px; height: 18px;
+      accent-color: var(--sf-blue);
+      cursor: pointer;
+      vertical-align: middle;
+    }
+
+    /* ── Check All toolbar ── */
+    .check-all-toolbar {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+    }
+    .check-all-btn {
+      background: white;
+      border: 1px solid var(--sf-blue);
+      color: var(--sf-blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .check-all-btn:hover { background: var(--sf-blue); color: white; }
+    .check-all-btn::before {
+      content: "✓";
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* ── Checklists ── */
+    ul.checklist { list-style: none; padding: 0; margin: 8px 0; }
+
+    ul.checklist li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      margin-bottom: 4px;
+      transition: background 0.1s;
+    }
+
+    ul.checklist li:hover { background: var(--sf-light); }
+
+    ul.checklist li input[type="checkbox"] {
+      margin-top: 3px; width: 18px; height: 18px;
+      accent-color: var(--sf-blue);
+      flex-shrink: 0; cursor: pointer;
+    }
+
+    ul.checklist li label { cursor: pointer; line-height: 1.6; }
+
+    /* ── Bullet lists ── */
+    ul.bullets { padding-left: 22px; margin: 8px 0 16px; }
+    ul.bullets li { margin-bottom: 10px; font-size: 16px; line-height: 1.65; }
+
+    /* ── Code block ── */
+    .code-block {
+      background: #1B2A40;
+      color: #C8D8F0;
+      border-radius: 8px;
+      padding: 18px 22px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      margin: 12px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    code {
+      background: #EAF4FF;
+      color: var(--sf-blue);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .sub-label {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--sf-dark);
+      margin: 18px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .tag.post     { background: #FFF3E0; color: #B54B00; }
+    .tag.optional { background: #E8F8EC; color: #2E844A; }
+    .tag.dayof    { background: #EAF4FF; color: var(--sf-blue); }
+
+    /* ── Navigation footer ── */
+    .nav-footer {
+      background: white;
+      border-top: 1px solid var(--sf-border);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      gap: 16px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid var(--sf-blue);
+      transition: all 0.15s;
+      background: white;
+      color: var(--sf-blue);
+      letter-spacing: 0.01em;
+      min-width: 180px;
+      justify-content: center;
+    }
+
+    .nav-btn:hover { background: var(--sf-light); }
+
+    .nav-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .nav-btn.primary {
+      background: var(--sf-blue);
+      color: white;
+      border-color: var(--sf-blue);
+    }
+
+    .nav-btn.primary:hover { background: var(--sf-dark); border-color: var(--sf-dark); }
+
+    .card-counter {
+      font-size: 15px;
+      color: var(--sf-muted);
+      font-weight: 600;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* ── Agent track colors ── */
+    :root {
+      --track-sales:    #0070D2;
+      --track-employee: #7B5EA7;
+      --track-service:  #2E844A;
+      --track-shared:   #54698D;
+    }
+
+    /* ── Choose Your Agent chooser ── */
+    .agent-chooser {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .chooser-card {
+      border: 2px solid var(--sf-border);
+      border-radius: 10px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+      text-align: center;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .chooser-card.cs-sales    { --track-color: var(--track-sales); }
+    .chooser-card.cs-employee { --track-color: var(--track-employee); }
+    .chooser-card.cs-service  { --track-color: var(--track-service); }
+    .chooser-card:hover { border-color: var(--track-color); background: var(--sf-light); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .chooser-icon { font-size: 32px; margin-bottom: 10px; }
+    .chooser-card h3 { font-size: 15px; font-weight: 700; color: var(--sf-dark); margin-bottom: 6px; }
+    .chooser-card p  { font-size: 13px; color: var(--sf-muted); line-height: 1.5; margin-bottom: 16px; }
+    .chooser-cta {
+      margin-top: auto;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--track-color);
+    }
+
+    /* ── Static preview cards (non-interactive) ── */
+    .preview-card {
+      background: #F4F6F9;
+      border: 1px solid var(--sf-border);
+      border-radius: 10px;
+      padding: 18px 16px;
+      text-align: center;
+      cursor: default;
+    }
+    .preview-card .preview-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: #E5E9F0;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .preview-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      margin-bottom: 6px;
+    }
+    .preview-card p {
+      font-size: 13px;
+      color: var(--sf-muted);
+      line-height: 1.5;
+    }
+    .preview-card .preview-emoji {
+      font-size: 28px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      display: none;
+      background: white;
+      border-bottom: 2px solid var(--sf-border);
+      padding: 0 28px;
+      flex-shrink: 0;
+    }
+    .tab-bar.visible { display: flex; }
+    .tab-btn {
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      color: var(--sf-muted);
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--sf-dark); }
+    .tab-btn.tab-sales.active    { color: var(--track-sales);    border-bottom-color: var(--track-sales); }
+    .tab-btn.tab-employee.active { color: var(--track-employee); border-bottom-color: var(--track-employee); }
+    .tab-btn.tab-service.active  { color: var(--track-service);  border-bottom-color: var(--track-service); }
+
+    /* ── Sidebar track coloring ── */
+    .nav-section-group.track-shared   .nav-section-num { background: var(--sf-muted); }
+    .nav-section-group.track-sales    .nav-section-num { background: var(--track-sales); }
+    .nav-section-group.track-employee .nav-section-num { background: var(--track-employee); }
+    .nav-section-group.track-service  .nav-section-num { background: var(--track-service); }
+
+    .nav-section-group.track-sales    .nav-section-header { border-left: 3px solid var(--track-sales); }
+    .nav-section-group.track-employee .nav-section-header { border-left: 3px solid var(--track-employee); }
+    .nav-section-group.track-service  .nav-section-header { border-left: 3px solid var(--track-service); }
+
+    .nav-section-group.track-inactive { opacity: 0.32; pointer-events: none; }
+
+    .nav-item.active.track-sales    { border-left-color: var(--track-sales);    color: var(--track-sales); }
+    .nav-item.active.track-employee { border-left-color: var(--track-employee); color: var(--track-employee); }
+    .nav-item.active.track-service  { border-left-color: var(--track-service);  color: var(--track-service); }
+    .nav-item.active.track-sales    .nav-dot { background: var(--track-sales); }
+    .nav-item.active.track-employee .nav-dot { background: var(--track-employee); }
+    .nav-item.active.track-service  .nav-dot { background: var(--track-service); }
+
+    /* ── Card header gradients per track ── */
+    .card.track-employee .card-header { background: linear-gradient(135deg, #2E1B5E 0%, #7B5EA7 100%); }
+    .card.track-service  .card-header { background: linear-gradient(135deg, #0A3D1F 0%, #2E844A 100%); }
+
+    /* ── Nav footer track border ── */
+    .nav-footer.track-sales    { border-bottom-color: var(--track-sales); }
+    .nav-footer.track-employee { border-bottom-color: var(--track-employee); }
+    .nav-footer.track-service  { border-bottom-color: var(--track-service); }
+
+    /* ── Copy-paste cards ── */
+    .copy-card-wrap { position: relative; margin: 12px 0; }
+    .copy-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.85);
+      font-size: 12px; font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .copy-btn:hover  { background: rgba(255,255,255,0.22); color: white; }
+    .copy-btn.copied { background: rgba(46,132,74,0.35); border-color: rgba(46,132,74,0.5); color: #7DEBA4; }
+    .copy-hint {
+      font-size: 13px;
+      color: var(--sf-muted);
+      font-style: italic;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .placeholder { color: #5DB8F7; font-weight: 700; }
+
+    /* ── Confetti ── */
+    .confetti-layer {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 100vh;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 14px;
+      opacity: 0.95;
+      will-change: transform, opacity;
+      animation: confetti-fall linear forwards;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translate3d(0, 0, 0) rotate(0deg);    opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translate3d(var(--drift, 0px), 105vh, 0) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── Completion cards (per agent track) ── */
+    .completion-hero {
+      background: linear-gradient(135deg, #EFF7F0 0%, #DAF0E0 100%);
+      border-radius: 12px;
+      padding: 36px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .completion-icon {
+      width: 72px; height: 72px;
+      background: var(--sf-green);
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(46,132,74,0.3);
+    }
+    .completion-hero h2 {
+      font-size: 26px;
+      color: var(--sf-dark);
+      margin-bottom: 10px;
+    }
+    .completion-blurb {
+      font-size: 15px;
+      color: var(--sf-muted);
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    ul.next-steps { list-style: none; padding: 0; margin: 8px 0 24px; }
+    ul.next-steps li {
+      background: white;
+      border: 1px solid var(--sf-border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.15s, transform 0.15s;
+      line-height: 1.5;
+    }
+    ul.next-steps li:hover { border-color: var(--sf-blue); transform: translateX(2px); }
+    ul.next-steps li::before {
+      content: "→";
+      color: var(--sf-blue);
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .completion-cta {
+      background: var(--sf-note-bg);
+      border-left: 4px solid var(--sf-blue);
+      border-radius: 8px;
+      padding: 18px 22px;
+      font-size: 15px;
+      color: var(--sf-dark);
+      line-height: 1.65;
+      margin-bottom: 22px;
+    }
+
+    .completion-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 2px solid var(--sf-blue);
+      background: white;
+      color: var(--sf-blue);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .completion-back:hover { background: var(--sf-blue); color: white; }
+
+    /* Hide completion nav-items until gate satisfied */
+    .nav-item.completion-nav-item { display: none; }
+    .nav-item.completion-nav-item.completion-unlocked { display: flex; }
+
+    /* ── Sidebar section completion indicator ── */
+    .nav-check {
+      margin-left: auto;
+      width: 18px; height: 18px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: transparent;
+    }
+    .nav-item.section-complete {
+      background: var(--sf-green-bg);
+    }
+    .nav-item.section-complete .nav-check {
+      color: var(--sf-green);
+    }
+    .nav-item.section-complete .nav-check::before { content: "✓"; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" fill="#0070D2"/>
+      <path d="M8 12l2.5 2.5L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>Agentforce Co-Build Workshop Guide</h1>
+  <span class="badge">Workshop Reference</span>
+</header>
+
+<div class="shell">
+
+  <!-- Nav bar — always visible at top -->
+  <div class="nav-footer">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled>← Previous</button>
+    <span class="card-counter" id="cardCounter"></span>
+    <button class="nav-btn primary" id="btnNext" onclick="navigate(1)">Next →</button>
+  </div>
+
+  <div class="shell-body">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"></aside>
+
+    <!-- Stage -->
+    <div class="stage">
+
+      <!-- Progress -->
+      <div class="progress-bar-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <span class="progress-label" id="progressLabel">Step 1 of 1</span>
+      </div>
+
+      <!-- Agent tabs -->
+      <div class="tab-bar" id="tabBar">
+        <button class="tab-btn tab-sales"    id="tab-sales"    onclick="switchTrack('sales')">💼 Sales</button>
+        <button class="tab-btn tab-employee" id="tab-employee" onclick="switchTrack('employee')">🤖 Employee</button>
+        <button class="tab-btn tab-service"  id="tab-service"  onclick="switchTrack('service')">🎧 Service</button>
+      </div>
+
+      <!-- Cards -->
+      <div class="card-area" id="cardArea"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CARD DATA
+// ─────────────────────────────────────────────
+const cards = [
+
+  // ── INTRO ──
+  {
+    sectionLabel: "Overview",
+    sectionNum: "",
+    title: "Agentforce Co-Build Workshop Guide",
+    subtitle: "Build and activate Agentforce agents together — step by step.",
+    isIntro: true,
+    track: "shared",
+    body: `
+      <p class="section-intro">This guide walks your team through the full setup for Agentforce agents, from org prerequisites through testing and deployment. Sections 0–1 are shared across all agents. After completing shared setup, you'll branch into the agent-specific track that fits your use case.</p>
+      <div class="sub-label" style="margin-top:20px;">Agents You'll Build</div>
+      <div class="agent-chooser">
+        <div class="preview-card">
+          <img class="preview-img" src="" alt="Sales Agent — illustration of a Salesforce rep using AI for account management" />
+          <div class="preview-emoji">💼</div>
+          <h3>Sales Agent</h3>
+          <p>Account summaries, follow-up emails, opportunity updates, call logging.</p>
+        </div>
+        <div class="preview-card">
+          <img class="preview-img" src="" alt="Employee Agent — illustration of an internal assistant helping with HR and process questions" />
+          <div class="preview-emoji">🤖</div>
+          <h3>Employee Agent</h3>
+          <p>Internal process lookup, policy Q&amp;A, task creation, documentation delivery.</p>
+        </div>
+        <div class="preview-card">
+          <img class="preview-img" src="" alt="Service Agent — illustration of a customer support agent deflecting cases and escalating to humans" />
+          <div class="preview-emoji">🎧</div>
+          <h3>Service Agent</h3>
+          <p>Case deflection, knowledge search, escalation to human agents, chat channel.</p>
+        </div>
+      </div>
+    `
+  },
+
+  // ── SECTION 1 ──
+  {
+    sectionLabel: "Section 0: Prerequisites & Org Checklist",
+    sectionNum: "0",
+    title: "0.1 Salesforce Edition & Licenses",
+    subtitle: "Confirm all required licenses are provisioned before the workshop.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce editions & licenses overview
+    body: `
+      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Confirm licenses are provisioned in <strong>Setup → Company Information → Licenses</strong>.</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Requirement</th><th>Details</th><th>✓</th></tr></thead>
+        <tbody>
+          <tr><td>Salesforce Edition</td><td>Enterprise or Unlimited Edition required</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Agentforce License</td><td>Agentforce for Sales or Agentforce Platform license provisioned</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Einstein Platform License</td><td>Required for Einstein Generative AI features</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Data Cloud License</td><td>Data Cloud for Salesforce required for agent grounding</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Sales Cloud License</td><td>Required for Account Management agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
+        </tbody>
+      </table></div>
+    `
+  },
+  {
+    sectionLabel: "Section 0: Prerequisites & Org Checklist",
+    sectionNum: "0",
+    title: "0.2 Org Settings",
+    subtitle: "Enable required platform settings before the workshop.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce admin org-setup trail
+    body: `
+      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Enable these settings at least <strong>24 hours before the workshop</strong>. Some features require a propagation window before they become active.</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Setting</th><th>Where to Enable</th><th>✓</th></tr></thead>
+        <tbody>
+          <tr><td>Einstein Generative AI</td><td>Setup → Einstein Generative AI → Enable</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Agentforce Agents</td><td>Setup → Agents → Enable Agentforce</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Data Cloud</td><td>Setup → Data Cloud → Enable</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Einstein Activity Capture</td><td>Setup → Einstein Activity Capture → Enabled</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Sharing Settings</td><td>Org-Wide Defaults reviewed for Accounts, Contacts, Opportunities</td><td><input type="checkbox" class="row-check"></td></tr>
+        </tbody>
+      </table></div>
+    `
+  },
+  {
+    sectionLabel: "Section 0: Prerequisites & Org Checklist",
+    sectionNum: "0",
+    title: "0.3 User Permissions",
+    subtitle: "Assign the right permissions to all workshop participants.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Sets trail
+    body: `
+      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Create a Permission Set combining these permissions and assign it to all workshop participants before the session.</span></div>
+      <p class="section-intro">The users who will build and test the agents need the following permissions assigned.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Permission</th><th>Where to Assign</th></tr></thead>
+        <tbody>
+          <tr><td>Customize Application</td><td>System Permissions on Profile or Permission Set</td></tr>
+          <tr><td>Manage Einstein Features</td><td>Permission Set: Einstein AI Permissions</td></tr>
+          <tr><td>Agentforce Admin</td><td>Permission Set: Agentforce Admin</td></tr>
+          <tr><td>Data Cloud Admin</td><td>Permission Set: Data Cloud Admin</td></tr>
+          <tr><td>View Setup and Configuration</td><td>System Permissions</td></tr>
+        </tbody>
+      </table></div>
+    `
+  },
+  {
+    sectionLabel: "Section 0: Prerequisites & Org Checklist",
+    sectionNum: "0",
+    title: "0.4 Data Readiness",
+    subtitle: "Confirm data quality in the org before the workshop.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data quality / data readiness trail
+    body: `
+      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Run a SOQL report or list view to confirm data quality before the workshop.</span></div>
+      <p class="section-intro">Agent output quality depends on the completeness of the underlying data.</p>
+      <div class="sub-label">Account Data — Required for Sales Agent</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Data Check</th><th>Recommended Threshold</th><th>✓</th></tr></thead>
+        <tbody>
+          <tr><td>Accounts have Owner assigned</td><td>100%</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Accounts have Industry populated</td><td>≥ 80%</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Accounts have Last Activity Date within 90 days</td><td>≥ 60%</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Open Opportunities linked to Accounts</td><td>Present in org</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Contacts linked to Accounts</td><td>≥ 1 contact per active Account</td><td><input type="checkbox" class="row-check"></td></tr>
+        </tbody>
+      </table></div>
+      <div class="sub-label">Internal Knowledge — Required for Employee-Facing Agent</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Data Check</th><th>Notes</th><th>✓</th></tr></thead>
+        <tbody>
+          <tr><td>Knowledge Articles exist in Salesforce Knowledge</td><td>At least 10 articles recommended for testing</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Articles are categorized and published</td><td>Draft articles will not surface in agent responses</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Data Categories map to agent audience</td><td>Internal-only articles should be restricted appropriately</td><td><input type="checkbox" class="row-check"></td></tr>
+        </tbody>
+      </table></div>
+    `
+  },
+  {
+    sectionLabel: "Section 0: Prerequisites & Org Checklist",
+    sectionNum: "0",
+    title: "0.5 Pre-Workshop Environment Check",
+    subtitle: "Run through this checklist together at the start of the session.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Sandbox vs production trail
+    tag: "dayof",
+    tagLabel: "Day-Of",
+    body: `
+      <ul class="checklist" id="envChecklist">
+        <li><input type="checkbox" id="c1"><label for="c1">All participants can log into the Salesforce org</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">All participants have the workshop Permission Set assigned</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Setup → Agents page loads without error</label></li>
+        <li><input type="checkbox" id="c4"><label for="c4">Data Cloud is showing as Active in Setup</label></li>
+        <li><input type="checkbox" id="c5"><label for="c5">At least one Einstein Generative AI model is connected (Setup → Einstein Generative AI → AI Models)</label></li>
+        <li><input type="checkbox" id="c6"><label for="c6">Build environment confirmed — sandbox, sandbox-adjacent, or production</label></li>
+      </ul>
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Building in production is not recommended. Changes made during the workshop will be live immediately. If proceeding in production, ensure all participants understand this risk before continuing.</span></div>
+    `
+  },
+
+  // ── SECTION 2 ──
+  {
+    sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
+    sectionNum: "1",
+    title: "1.1 Enable Einstein Generative AI",
+    subtitle: "Turn on the Einstein platform before building either agent.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Generative AI Quick Start
+    body: `
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>No additional model configuration is required for this workshop. The default Salesforce Einstein model is used for both agents.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Einstein Generative AI</strong>.</div></li>
+        <li><div class="step-content">Toggle <strong>Enable Einstein Generative AI</strong> to on.</div></li>
+        <li><div class="step-content">Accept the Einstein Generative AI Terms of Service if prompted.</div></li>
+        <li><div class="step-content">Navigate to <strong>Setup → Einstein Generative AI → AI Models</strong>.</div></li>
+        <li><div class="step-content">Confirm the default <strong>Salesforce Einstein</strong> model is listed and has a status of <strong>Active</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
+    sectionNum: "1",
+    title: "1.2 Connect Data Cloud",
+    subtitle: "Verify Data Cloud is active and connected to your org.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud Quick Start
+    body: `
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Data Stream ingestion and Data Model Object mapping are covered in <strong>Appendix A</strong>. Complete those steps to enable agent grounding in Data Cloud — this can be done after the workshop.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Data Cloud</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Get Started</strong> if Data Cloud has not been initialized, or confirm the status shows <strong>Active</strong>.</div></li>
+        <li><div class="step-content">Verify your Data Cloud org is connected by checking that the <strong>Data Cloud Setup</strong> home page loads without errors.</div></li>
+        <li><div class="step-content">Confirm at least one <strong>Data Space</strong> exists (a default Data Space is created automatically on provisioning).</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
+    sectionNum: "1",
+    title: "1.3 Enable Agentforce in Setup",
+    subtitle: "Activate the Agentforce platform in your org.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Setup trail
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>If the <strong>Agents</strong> menu item is not visible in Setup, confirm the Agentforce license is provisioned (Section 0.1) and that Einstein Generative AI is enabled (Step 1.1).</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Agents</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Enable Agentforce</strong>.</div></li>
+        <li><div class="step-content">Confirm the Agents setup page loads and shows the option to create a new agent.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
+    sectionNum: "1",
+    title: "1.4 Verify Einstein Trust Layer",
+    subtitle: "Confirm data masking and audit logging are active.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer trail
+    body: `
+      <p class="section-intro">The Einstein Trust Layer is enabled automatically when Einstein Generative AI is turned on. Verify the configuration is active before building agents.</p>
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Full Trust Layer configuration options, including zero data retention and grounding controls, are covered in <strong>Appendix B</strong>.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer</strong>.</div></li>
+        <li><div class="step-content">Confirm <strong>Data Masking</strong> is set to on — this prevents sensitive field data from being sent to the LLM.</div></li>
+        <li><div class="step-content">Confirm <strong>Audit Trail</strong> is enabled — this logs all Einstein interactions for your org.</div></li>
+        <li><div class="step-content">Review the <strong>Toxicity Detection</strong> setting and enable if required by your organization's policy.</div></li>
+      </ol>
+    `
+  },
+
+  // ── CHOOSE YOUR AGENT ──
+  {
+    sectionLabel: "Choose Your Agent",
+    sectionNum: "→",
+    title: "Choose Your Agent Track",
+    subtitle: "Shared setup is complete. Pick the agent track you'll build today.",
+    track: "shared",
+    body: `
+      <p class="section-intro">You've finished the shared prerequisites and platform configuration. From here, the workshop branches by agent type. Pick the track that matches what you're building — you can switch tabs at any time using the agent tabs at the top of the page.</p>
+      <div class="agent-chooser">
+        <div class="chooser-card cs-sales" onclick="startAgentTrack('sales')">
+          <div class="chooser-icon">💼</div>
+          <h3>Sales Agent</h3>
+          <p>Account summaries, follow-up emails, opportunity updates, call logging.</p>
+          <div class="chooser-cta">Start Sales Setup →</div>
+        </div>
+        <div class="chooser-card cs-employee" onclick="startAgentTrack('employee')">
+          <div class="chooser-icon">🤖</div>
+          <h3>Employee Agent</h3>
+          <p>Internal process lookup, policy Q&amp;A, task creation, documentation delivery.</p>
+          <div class="chooser-cta">Start Employee Setup →</div>
+        </div>
+        <div class="chooser-card cs-service" onclick="startAgentTrack('service')">
+          <div class="chooser-icon">🎧</div>
+          <h3>Service Agent</h3>
+          <p>Case deflection, knowledge search, escalation to human agents, chat channel.</p>
+          <div class="chooser-cta">Start Service Setup →</div>
+        </div>
+      </div>
+    `
+  },
+
+  // ── SECTION 3 ──
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.1 Create the Agent in Agentforce Studio",
+    subtitle: "Launch Agentforce Studio and create a new Employee Agent.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Employee Agent trail
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
+        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
+        <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Employee Agent</strong> as the agent type.</div></li>
+        <li><div class="step-content">Enter the following in the creation wizard:
+          <ul>
+            <li><strong>Agent Name:</strong> Internal Process Assistant <em>(or your preferred name)</em></li>
+            <li><strong>Role:</strong> Helps employees find answers to internal process and policy questions and take follow-up actions.</li>
+            <li><strong>Company:</strong> Enter your organization's name to give the agent context.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+      </ol>
+      <div class="copy-card-wrap">
+        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
+        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
+      </div>
+      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.2 Connect Knowledge as a Data Source",
+    subtitle: "Connect Salesforce Knowledge as the agent's information source.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce Knowledge Setup
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Confirm that published Knowledge Articles exist before this step. Draft articles will not surface in agent responses. See Section 0.4 for the pre-workshop data check.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Data Source → Salesforce Knowledge</strong>.</div></li>
+        <li><div class="step-content">Choose the Data Categories that contain your internal process articles.</div></li>
+        <li><div class="step-content">Set the audience filter to <strong>Internal</strong> to restrict to employee-facing articles only.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.3 Create a SubAgent: Process Lookup",
+    subtitle: "Define what the agent can talk about and how it should behave.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: SubAgents / Topics trail
+    body: `
+      <p class="section-intro">SubAgents define what the agent can talk about and what actions it can take within that subject area.</p>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
+        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
+        <li><div class="step-content">Configure the SubAgent:
+          <ul>
+            <li><strong>Name:</strong> Process Lookup</li>
+            <li><strong>Description/Classification:</strong> Handles employee questions about internal processes, policies, and procedures. Routes questions to Knowledge and offers follow-up via email or task.</li>
+            <li><strong>Scope:</strong> Answer questions using only the connected Knowledge sources. Do not speculate beyond published content.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
+          <div class="copy-card-wrap">
+            <div class="code-block">When an employee asks a process or policy question, search the Knowledge base first.
+Summarize the relevant article in plain language. If no article is found, let the
+employee know and offer to create a follow-up task or send available documentation
+via email. Always be concise and professional.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'When an employee asks a process or policy question, search the Knowledge base first.\nSummarize the relevant article in plain language. If no article is found, let the\nemployee know and offer to create a follow-up task or send available documentation\nvia email. Always be concise and professional.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.4 Add Action: Send Email",
+    subtitle: "Allow the agent to send process documentation to employees.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Actions: Send Email
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Process Lookup</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Send Email</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>To:</strong> Mapped to the requesting employee's email address</li>
+            <li><strong>Subject:</strong> Agent-generated, based on the process topic discussed</li>
+            <li><strong>Body:</strong> Agent-generated, including a summary of the process and links to relevant Knowledge Articles</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when an employee asks for documentation to be sent to them, or when
+the response references a process document they would benefit from having on record.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when an employee asks for documentation to be sent to them, or when\nthe response references a process document they would benefit from having on record.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.5 Add Action: Create Task",
+    subtitle: "Allow the agent to log follow-up tasks for employees.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Actions: Create Task
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Process Lookup</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Create Task</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>Subject:</strong> Agent-generated, summarizing the follow-up needed</li>
+            <li><strong>Assigned To:</strong> Mapped to the employee or relevant team member</li>
+            <li><strong>Due Date:</strong> Optionally set by the agent or confirmed with the employee</li>
+            <li><strong>Description:</strong> Agent-generated, including context from the conversation</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when an employee's request requires a follow-up that cannot be resolved
+immediately, or when they ask to be reminded about a process step at a later date.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when an employee\'s request requires a follow-up that cannot be resolved\nimmediately, or when they ask to be reminded about a process step at a later date.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.6 Configure the Email Channel",
+    subtitle: "Set up the inbound email address employees will use to reach the agent.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Email Channel
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure the inbound email address is set up in your org's email configuration before activating. Verify routing with your admin before testing.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Channel → Email</strong>.</div></li>
+        <li><div class="step-content">Configure the following:
+          <ul>
+            <li><strong>Email Address:</strong> The inbound address employees will use (e.g. <code>process-help@yourcompany.com</code>)</li>
+            <li><strong>Routing:</strong> Confirm email routes to Agentforce and not to a human queue by default</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
+    title: "2.7 Activate the Agent",
+    subtitle: "Activate and run a quick test before sharing with employees.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
+    body: `
+      <div class="callout success"><span class="callout-icon">✅</span><span>Test with an internal email before sharing the address with employees.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
+        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
+        <li><div class="step-content">Confirm the activation summary shows the Knowledge data source, both actions, and the Email channel.</div></li>
+        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "★",
+    title: "🎉 You've Built Your Employee Agent!",
+    subtitle: "Every step in the Employee track is checked off. Here's what to do next.",
+    track: "employee",
+    isCompletion: true,
+    body: `
+      <div class="completion-hero">
+        <div class="completion-icon">✓</div>
+        <h2>You've Built Your Employee Agent!</h2>
+        <p class="completion-blurb">Your Employee Agent is configured to look up internal processes and policies from Salesforce Knowledge, send process documentation via email, and create follow-up tasks for employees who need a reminder.</p>
+      </div>
+      <div class="sub-label">Next Steps</div>
+      <ul class="next-steps">
+        <li>Test your agent in Agentforce Studio</li>
+        <li>Customize the agent prompt with your company's specific use case</li>
+        <li>Share with your team and gather feedback</li>
+        <li>Explore additional actions and subagents to expand capability</li>
+        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+      </ul>
+      <div class="completion-cta">
+        <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
+      </div>
+      <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
+    `
+  },
+
+  // ── SECTION 4 ──
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.1 Create the Agent in Agentforce Studio",
+    subtitle: "Launch Agentforce Studio and create a new Service Agent for sales reps.",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Sales Agent trail
+    body: `
+      <div class="callout note"><span class="callout-icon">🔖</span><span><strong>Post-Workshop:</strong> Data Cloud grounding for this agent is covered in Appendix A. The agent uses CRM data only during the workshop.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
+        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
+        <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Service Agent</strong> as the agent type.</div></li>
+        <li><div class="step-content">Enter the following in the creation wizard:
+          <ul>
+            <li><strong>Agent Name:</strong> Sales Account Management Agent <em>(or your preferred name)</em></li>
+            <li><strong>Role:</strong> Helps sales representatives manage accounts by surfacing CRM insights, drafting follow-up emails, updating opportunity records, and logging activity.</li>
+            <li><strong>Company:</strong> Enter your organization's name.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+      </ol>
+      <div class="copy-card-wrap">
+        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
+        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
+      </div>
+      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.2 Connect CRM Objects as Data Sources",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Connect CRM data sources
+    subtitle: "Connect the CRM objects the agent will use to answer rep questions.",
+    body: `
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Data Cloud grounding is not configured during this workshop. See Appendix A to complete that setup after the session.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Data Source → Salesforce CRM</strong>.</div></li>
+        <li><div class="step-content">Add the following objects:
+          <ul>
+            <li><strong>Account</strong> — Name, Owner, Industry, Last Activity Date, Description</li>
+            <li><strong>Contact</strong> — Name, Email, Phone, Account, Title, Last Activity Date</li>
+            <li><strong>Opportunity</strong> — Name, Stage, Close Date, Amount, Account, Owner</li>
+            <li><strong>Task / Activity</strong> — Subject, Description, Activity Date, Related To, Assigned To</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">For each object, set the data access scope to match the rep's sharing model (typically <strong>Owned + Team</strong>).</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.3 Create a SubAgent: Account Management",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Sales SubAgent / Account Management
+    subtitle: "Define the agent's subject area, scope, and behavioral instructions.",
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
+        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
+        <li><div class="step-content">Configure the SubAgent:
+          <ul>
+            <li><strong>Name:</strong> Account Management</li>
+            <li><strong>Description/Classification:</strong> Handles sales rep requests related to account summaries, contact follow-ups, opportunity updates, and activity logging. Uses CRM data only.</li>
+            <li><strong>Scope:</strong> Only use data from the connected CRM objects. Do not speculate beyond what is present in CRM.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
+          <div class="copy-card-wrap">
+            <div class="code-block">When a rep asks about an account, retrieve and summarize the most recent activity
+and any open opportunities. When drafting emails, use CRM context including last
+activity, opportunity stage, and contact details. When updating or creating records,
+confirm key fields with the rep before writing to CRM. When logging a call, capture
+the rep's summary and link it to the relevant account or opportunity.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'When a rep asks about an account, retrieve and summarize the most recent activity\nand any open opportunities. When drafting emails, use CRM context including last\nactivity, opportunity stage, and contact details. When updating or creating records,\nconfirm key fields with the rep before writing to CRM. When logging a call, capture\nthe rep\'s summary and link it to the relevant account or opportunity.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.4 Add Action: Summarize Account",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Get Record / Account
+    subtitle: "Allow the agent to retrieve and surface account details on request.",
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Get Record</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>Object:</strong> Account</li>
+            <li><strong>Fields to Return:</strong> Name, Owner, Industry, Last Activity Date, Open Opportunities (related list), Recent Contacts (related list)</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when a rep asks for a summary of an account, wants to know what's
+happening with a customer, or needs a quick overview before a meeting or call.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks for a summary of an account, wants to know what\'s\nhappening with a customer, or needs a quick overview before a meeting or call.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.5 Add Action: Draft Follow-Up Email",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Send Email (sales)
+    subtitle: "Allow the agent to draft and send follow-up emails to contacts.",
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Send Email</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>To:</strong> Mapped to the Contact's email address from CRM</li>
+            <li><strong>Subject:</strong> Agent-generated, based on the most recent interaction or open opportunity</li>
+            <li><strong>Body:</strong> Agent-generated, referencing CRM context (last activity, opportunity stage, next steps)</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when a rep asks to draft or send a follow-up email to a contact.
+Generate the email using account and opportunity context from CRM.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to draft or send a follow-up email to a contact.\nGenerate the email using account and opportunity context from CRM.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.6 Add Action: Create or Update Opportunity",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Create/Update Record
+    subtitle: "Allow the agent to create new opportunities or update existing ones.",
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">To create a new opportunity, search for and select <strong>Create Record</strong>, set Object to <strong>Opportunity</strong>.</div></li>
+        <li><div class="step-content">To update an existing opportunity, search for and select <strong>Update Record</strong>, set Object to <strong>Opportunity</strong>.</div></li>
+        <li><div class="step-content">Configure inputs for both:
+          <ul>
+            <li><strong>Name, Stage, Close Date, Amount, Account</strong> — agent-generated or rep-confirmed via conversation</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when a rep asks to log a new opportunity or update an existing one.
+Confirm key fields (stage, close date, amount) with the rep before writing to CRM.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to log a new opportunity or update an existing one.\nConfirm key fields (stage, close date, amount) with the rep before writing to CRM.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.7 Add Action: Log a Call or Activity",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Create Task (sales)
+    subtitle: "Allow the agent to log completed calls and activities against CRM records.",
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Create Task</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>Subject:</strong> Agent-generated or rep-provided (e.g. "Call with [Contact Name]")</li>
+            <li><strong>Type:</strong> Call</li>
+            <li><strong>Status:</strong> Completed</li>
+            <li><strong>Description:</strong> Agent-generated summary based on rep input</li>
+            <li><strong>Related To:</strong> Mapped to the relevant Account or Opportunity</li>
+            <li><strong>Assigned To:</strong> Mapped to the rep</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when a rep asks to log a call, meeting, or activity against an
+account or opportunity. Capture the summary from the rep's description.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to log a call, meeting, or activity against an\naccount or opportunity. Capture the summary from the rep\'s description.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.8 Configure the Email Channel",
+    subtitle: "Set up the inbound email address sales reps will use to reach the agent.",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Email Channel
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure the inbound email address is set up in your org's email configuration before activating. Verify routing with your admin before testing.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Channel → Email</strong>.</div></li>
+        <li><div class="step-content">Configure the following:
+          <ul>
+            <li><strong>Email Address:</strong> The inbound address sales reps will use (e.g. <code>sales-agent@yourcompany.com</code>)</li>
+            <li><strong>Routing:</strong> Confirm email routes to Agentforce and not to a human queue by default</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
+    title: "3.9 Activate the Agent",
+    subtitle: "Activate and run a test before sharing with the sales team.",
+    track: "sales",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
+    body: `
+      <div class="callout success"><span class="callout-icon">✅</span><span>Send a test email from a rep's inbox before sharing with the broader sales team. Verify the agent retrieves account data and that actions write back to CRM correctly.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
+        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
+        <li><div class="step-content">Confirm the activation summary shows the CRM data sources, all four actions, and the Email channel.</div></li>
+        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "★",
+    title: "🎉 You've Built Your Sales Agent!",
+    subtitle: "Every step in the Sales track is checked off. Here's what to do next.",
+    track: "sales",
+    isCompletion: true,
+    body: `
+      <div class="completion-hero">
+        <div class="completion-icon">✓</div>
+        <h2>You've Built Your Sales Agent!</h2>
+        <p class="completion-blurb">Your Sales Agent is configured to summarize accounts, draft follow-up emails using CRM context, create or update opportunities, and log calls and activities — all reachable through email from your reps.</p>
+      </div>
+      <div class="sub-label">Next Steps</div>
+      <ul class="next-steps">
+        <li>Test your agent in Agentforce Studio</li>
+        <li>Customize the agent prompt with your company's specific use case</li>
+        <li>Share with your team and gather feedback</li>
+        <li>Explore additional actions and subagents to expand capability</li>
+        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+      </ul>
+      <div class="completion-cta">
+        <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
+      </div>
+      <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
+    `
+  },
+
+  // ── SECTION 4 (SERVICE) ──
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.1 Create the Agent in Agentforce Studio",
+    subtitle: "Launch Agentforce Studio and create a new Service Agent.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Service Agent trail
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
+        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
+        <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Service Agent</strong> as the agent type.</div></li>
+        <li><div class="step-content">Enter the following in the creation wizard:
+          <ul>
+            <li><strong>Agent Name:</strong> Customer Support Agent <em>(or your preferred name)</em></li>
+            <li><strong>Role:</strong> Helps customers resolve support questions, search knowledge, and escalate to a human agent when needed.</li>
+            <li><strong>Company:</strong> Enter your organization's name.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+      </ol>
+      <div class="copy-card-wrap">
+        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
+        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
+      </div>
+      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.2 Connect Knowledge as a Data Source",
+    subtitle: "Connect Salesforce Knowledge as the agent's primary information source.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce Knowledge for Service
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Confirm that published Knowledge Articles exist before this step. Draft articles will not surface in agent responses. See Section 0.4 for the pre-workshop data check.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Data Source → Salesforce Knowledge</strong>.</div></li>
+        <li><div class="step-content">Choose the Data Categories that contain your customer-facing support articles.</div></li>
+        <li><div class="step-content">Set the audience filter to <strong>External</strong> to surface customer-facing articles only.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.3 Create a SubAgent: Case Deflection",
+    subtitle: "Define the agent's scope for handling support questions.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Case Deflection / SubAgents
+    body: `
+      <p class="section-intro">SubAgents define what the agent can talk about and what actions it can take within that subject area.</p>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
+        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
+        <li><div class="step-content">Configure the SubAgent:
+          <ul>
+            <li><strong>Name:</strong> Case Deflection</li>
+            <li><strong>Description/Classification:</strong> Handles customer support questions by searching Knowledge and offering resolution steps. Escalates to a human agent if unresolved.</li>
+            <li><strong>Scope:</strong> Answer questions using only the connected Knowledge sources. Do not speculate beyond published content.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
+          <div class="copy-card-wrap">
+            <div class="code-block">When a customer asks a support question, search the Knowledge base first.
+Summarize the relevant article in plain language. If no article resolves
+the issue, offer to escalate to a human agent. Always confirm the customer's
+issue is resolved before closing the conversation.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'When a customer asks a support question, search the Knowledge base first.\nSummarize the relevant article in plain language. If no article resolves\nthe issue, offer to escalate to a human agent. Always confirm the customer\'s\nissue is resolved before closing the conversation.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.4 Add Action: Search Knowledge",
+    subtitle: "Allow the agent to search and return Knowledge Articles.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Search Knowledge
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Case Deflection</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Search Knowledge</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>Query:</strong> Derived from the customer's message</li>
+            <li><strong>Audience:</strong> External</li>
+            <li><strong>Max Results:</strong> 3</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action whenever a customer asks a product or support question.
+Return the most relevant article summary and a link if available.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action whenever a customer asks a product or support question.\nReturn the most relevant article summary and a link if available.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.5 Add Action: Escalate to Human Agent",
+    subtitle: "Route unresolved cases to a human support rep.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Transfer to Agent / escalation
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Inside the <strong>Case Deflection</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
+        <li><div class="step-content">Search for and select <strong>Transfer to Agent</strong>.</div></li>
+        <li><div class="step-content">Configure the action inputs:
+          <ul>
+            <li><strong>Queue:</strong> The human support queue for your org</li>
+            <li><strong>Transfer Message:</strong> Agent-generated summary of the customer's issue</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Add action instructions:
+          <div class="copy-card-wrap">
+            <div class="code-block">Use this action when the customer's issue cannot be resolved using Knowledge,
+or when the customer explicitly requests a human agent.</div>
+            <button class="copy-btn" onclick="copyCard(this, 'Use this action when the customer\'s issue cannot be resolved using Knowledge,\nor when the customer explicitly requests a human agent.')">Copy</button>
+          </div>
+          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
+        </div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.6 Configure the Chat Channel",
+    subtitle: "Set up Messaging for In-App and Web so customers can reach the agent.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Messaging for In-App and Web
+    body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure a Messaging for In-App and Web deployment is configured in your org before activating this channel.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Channel → Messaging for In-App and Web</strong>.</div></li>
+        <li><div class="step-content">Select the Messaging deployment to associate with this agent.</div></li>
+        <li><div class="step-content">Confirm routing is set to <strong>Agentforce</strong> (not a human queue) as the first responder.</div></li>
+        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.7 Activate the Agent",
+    subtitle: "Activate and run a test conversation before going live.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
+    body: `
+      <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test a conversation before activating on the live channel.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
+        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
+        <li><div class="step-content">Confirm the activation summary shows the Knowledge data source, both actions, and the Chat channel.</div></li>
+        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "★",
+    title: "🎉 You've Built Your Service Agent!",
+    subtitle: "Every step in the Service track is checked off. Here's what to do next.",
+    track: "service",
+    isCompletion: true,
+    body: `
+      <div class="completion-hero">
+        <div class="completion-icon">✓</div>
+        <h2>You've Built Your Service Agent!</h2>
+        <p class="completion-blurb">Your Service Agent is configured to deflect customer support questions using Salesforce Knowledge, escalate unresolved cases to human agents, and respond through the Messaging for In-App and Web channel.</p>
+      </div>
+      <div class="sub-label">Next Steps</div>
+      <ul class="next-steps">
+        <li>Test your agent in Agentforce Studio</li>
+        <li>Customize the agent prompt with your company's specific use case</li>
+        <li>Share with your team and gather feedback</li>
+        <li>Explore additional actions and subagents to expand capability</li>
+        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+      </ul>
+      <div class="completion-cta">
+        <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
+      </div>
+      <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
+    `
+  },
+
+  // ── SECTION 5 ──
+  {
+    sectionLabel: "Section 5: Testing & Validation",
+    sectionNum: "4",
+    title: "4.1 Test: Internal Employee-Facing Agent",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Testing & validation trail
+    subtitle: "Send test emails and verify response, knowledge retrieval, and actions.",
+    body: `
+      <p class="section-intro">Send test emails to the configured inbound address and verify the following.</p>
+      <div class="sub-label">Agent Response</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t1"><label for="t1">Agent replies to an inbound email within a reasonable time</label></li>
+        <li><input type="checkbox" id="t2"><label for="t2">Response is relevant to the question asked</label></li>
+        <li><input type="checkbox" id="t3"><label for="t3">Response cites or references a Knowledge Article where applicable</label></li>
+        <li><input type="checkbox" id="t4"><label for="t4">Agent does not fabricate information not present in Knowledge</label></li>
+      </ul>
+      <div class="sub-label">Send Email Action</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t5"><label for="t5">Agent offers to send documentation when appropriate</label></li>
+        <li><input type="checkbox" id="t6"><label for="t6">Email is delivered to the correct address</label></li>
+        <li><input type="checkbox" id="t7"><label for="t7">Email body includes relevant process content</label></li>
+      </ul>
+      <div class="sub-label">Create Task Action</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t8"><label for="t8">Agent offers to create a task when a follow-up is needed</label></li>
+        <li><input type="checkbox" id="t9"><label for="t9">Task appears in Salesforce with correct Subject, Assigned To, and Description</label></li>
+        <li><input type="checkbox" id="t10"><label for="t10">Task is linked to the correct record where applicable</label></li>
+      </ul>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Testing & Validation",
+    sectionNum: "4",
+    title: "4.2 Test: Sales Agent — Account Management",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Sales Agent testing trail
+    subtitle: "Send test emails using real account and rep context from your org.",
+    body: `
+      <div class="sub-label">Agent Response</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t11"><label for="t11">Agent replies to an inbound email within a reasonable time</label></li>
+        <li><input type="checkbox" id="t12"><label for="t12">Response draws from CRM data (Account, Contact, Opportunity, Activity)</label></li>
+        <li><input type="checkbox" id="t13"><label for="t13">Agent does not return data outside the rep's sharing model</label></li>
+      </ul>
+      <div class="sub-label">Summarize Account</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t14"><label for="t14">Agent returns an accurate account summary when asked</label></li>
+        <li><input type="checkbox" id="t15"><label for="t15">Summary includes recent activity and open opportunities</label></li>
+      </ul>
+      <div class="sub-label">Draft Follow-Up Email</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t16"><label for="t16">Agent drafts an email relevant to the account context</label></li>
+        <li><input type="checkbox" id="t17"><label for="t17">Email is addressed to the correct Contact</label></li>
+        <li><input type="checkbox" id="t18"><label for="t18">Email is delivered successfully</label></li>
+      </ul>
+      <div class="sub-label">Create / Update Opportunity</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t19"><label for="t19">Agent creates a new Opportunity record in CRM with correct field values</label></li>
+        <li><input type="checkbox" id="t20"><label for="t20">Agent updates an existing Opportunity when asked</label></li>
+        <li><input type="checkbox" id="t21"><label for="t21">Agent confirms key fields with the rep before writing to CRM</label></li>
+      </ul>
+      <div class="sub-label">Log a Call / Activity</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="t22"><label for="t22">Task is created in CRM with Type = Call and Status = Completed</label></li>
+        <li><input type="checkbox" id="t23"><label for="t23">Task is linked to the correct Account or Opportunity</label></li>
+        <li><input type="checkbox" id="t24"><label for="t24">Description reflects the rep's input</label></li>
+      </ul>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Testing & Validation",
+    sectionNum: "4",
+    title: "4.3 Issues & Follow-Up Log",
+    track: "shared",
+    subtitle: "Capture anything that needs attention after the workshop.",
+    body: `
+      <p class="section-intro">Use this table to log any issues that come up during testing.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Issue</th><th>Agent</th><th>Priority</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </tbody>
+      </table></div>
+    `
+  },
+
+  // ── SECTION 6 ──
+  {
+    sectionLabel: "Section 5: Deployment & Enablement",
+    sectionNum: "5",
+    title: "5.1 Access & Permissions Rollout",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Sets / rollout trail
+    subtitle: "Assign the right access before rolling out to users.",
+    body: `
+      <p class="section-intro">Before users can interact with the agents, the right permissions need to be in place.</p>
+      <div class="sub-label">Common approaches</div>
+      <ul class="bullets">
+        <li>Create a Permission Set specific to each agent and assign it to the target user group</li>
+        <li>Use Permission Set Groups to bundle agent access with other related permissions</li>
+        <li>Roll out in phases — start with a pilot group, validate behavior, then expand</li>
+      </ul>
+      <div class="sub-label">Typical steps</div>
+      <ol class="steps">
+        <li><div class="step-content">Identify the pilot user group</div></li>
+        <li><div class="step-content">Assign the relevant Permission Set</div></li>
+        <li><div class="step-content">Share the agent's inbound email address with the group</div></li>
+        <li><div class="step-content">Collect feedback before broader rollout</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 5: Deployment & Enablement",
+    sectionNum: "5",
+    title: "5.2 Internal Communications",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Change management trail
+    subtitle: "Let users know the agent exists and how to use it.",
+    body: `
+      <p class="section-intro">Users need to know the agent exists, what it does, and how to use it.</p>
+      <ul class="bullets">
+        <li>Slack or Teams announcement with a short description and the inbound email address</li>
+        <li>A one-page quick start guide shared by the admin or manager</li>
+        <li>A short Loom or recorded demo walkthrough</li>
+        <li>An internal Knowledge Article describing the agent's capabilities and limitations</li>
+      </ul>
+    `
+  },
+  {
+    sectionLabel: "Section 5: Deployment & Enablement",
+    sectionNum: "5",
+    title: "5.3 Training & Adoption",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: User adoption / enablement trail
+    subtitle: "Drive early adoption with demos, office hours, and manager reinforcement.",
+    body: `
+      <ul class="bullets">
+        <li>A live demo during a team meeting or sales standup</li>
+        <li>Office hours in the first two weeks post-launch for questions</li>
+        <li>A sample prompt library — a short list of example emails reps or employees can send to get started quickly</li>
+        <li>Manager reinforcement — asking reps to use the agent for a specific workflow for the first 30 days</li>
+      </ul>
+    `
+  },
+  {
+    sectionLabel: "Section 5: Deployment & Enablement",
+    sectionNum: "5",
+    title: "5.4 Monitoring & Iteration",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Interaction Logs / monitoring
+    subtitle: "Review usage and refine the agents after launch.",
+    body: `
+      <ul class="bullets">
+        <li>Review Einstein Interaction Logs in Setup to see how the agent is being used and where it falls short</li>
+        <li>Set up a feedback channel (Slack, email alias, or form) for users to flag issues</li>
+        <li>Schedule a 30-day review to assess action completion rates and response quality</li>
+        <li>Prioritize the Data Cloud grounding setup (Appendix A) as a near-term follow-up to improve Sales Agent response quality</li>
+      </ul>
+    `
+  },
+
+  // ── APPENDIX A ──
+  {
+    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionNum: "A",
+    title: "A.1 Create a Data Stream",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud Data Streams
+    subtitle: "Ingest CRM data into Data Cloud for agent grounding.",
+    tag: "post",
+    tagLabel: "Post-Workshop",
+    body: `
+      <p class="section-intro">A Data Stream ingests data from a source into Data Cloud.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Confirm the Data Stream shows a status of <strong>Active</strong> before proceeding to the next step.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Data Cloud → Data Streams</strong>.</div></li>
+        <li><div class="step-content">Click <strong>New</strong>.</div></li>
+        <li><div class="step-content">Select the data source type — for CRM data, choose <strong>Salesforce CRM</strong>.</div></li>
+        <li><div class="step-content">Select the objects to ingest: <strong>Account, Contact, Opportunity, Task</strong>.</div></li>
+        <li><div class="step-content">Choose the fields to include for each object (align with the fields configured in Section 3.2).</div></li>
+        <li><div class="step-content">Set the refresh schedule — <strong>Hourly</strong> is recommended for sales data.</div></li>
+        <li><div class="step-content">Click <strong>Deploy</strong>. Data Cloud will begin ingesting records on the next scheduled run.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionNum: "A",
+    title: "A.2 Map to Data Model Objects (DMOs)",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud DMO mapping
+    track: "shared",
+    subtitle: "Normalize ingested data into a standard schema agents can query.",
+    tag: "post",
+    tagLabel: "Post-Workshop",
+    body: `
+      <p class="section-intro">Data Model Objects normalize ingested data into a standard schema that agents and Einstein features can query.</p>
+      <div class="callout warning"><span class="callout-icon">⏱️</span><span>Field mapping is the most time-consuming part of this setup. Allocate at least 30–60 minutes depending on data complexity.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Data Cloud → Data Model</strong>.</div></li>
+        <li><div class="step-content">For each Data Stream, map it to the corresponding standard DMO:
+          <ul>
+            <li>Account → <strong>Account DMO</strong></li>
+            <li>Contact → <strong>Individual DMO</strong> (or Contact DMO if available)</li>
+            <li>Opportunity → <strong>Sales Order DMO</strong></li>
+            <li>Task/Activity → <strong>Engagement DMO</strong></li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Map the source fields to the target DMO fields. Required fields must be mapped before the DMO can be activated.</div></li>
+        <li><div class="step-content">Click <strong>Save and Activate</strong> for each DMO mapping.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionNum: "A",
+    title: "A.3 Ground the Sales Agent in Data Cloud",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent grounding with Data Cloud
+    track: "shared",
+    subtitle: "Connect the activated DMOs to the Sales Agent as a data source.",
+    tag: "post",
+    tagLabel: "Post-Workshop",
+    body: `
+      <p class="section-intro">Once DMOs are active and populated, connect them to the Sales Agent.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Test the agent after re-activation to confirm it retrieves enriched account data from Data Cloud in addition to standard CRM objects.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Agents</strong> and open the <strong>Sales Account Management Agent</strong>.</div></li>
+        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Data Source → Data Cloud</strong>.</div></li>
+        <li><div class="step-content">Select the DMOs configured in A.2.</div></li>
+        <li><div class="step-content">Set the data access scope to align with the rep's row-level security in Data Cloud.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Re-activate the agent to apply the new data source configuration.</div></li>
+      </ol>
+    `
+  },
+
+  // ── APPENDIX B ──
+  {
+    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
+    sectionNum: "B",
+    title: "B.1 Zero Data Retention",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer ZDR
+    track: "shared",
+    subtitle: "Add a contractual guarantee that prompt and response data is not stored.",
+    tag: "optional",
+    tagLabel: "Advanced",
+    body: `
+      <p class="section-intro">By default, Salesforce does not store prompt or response data after an Einstein interaction completes. Zero Data Retention (ZDR) provides an additional contractual guarantee of this.</p>
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>ZDR is a contract-level setting, not a toggle in Setup. If this is a compliance requirement, engage your AE before the workshop.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Contact your Salesforce Account Executive to confirm ZDR is included in or available for your agreement.</div></li>
+        <li><div class="step-content">Once confirmed, go to <strong>Setup → Einstein Trust Layer → Data Retention</strong>.</div></li>
+        <li><div class="step-content">Verify the retention policy is set to <strong>Zero Retention</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
+    sectionNum: "B",
+    title: "B.2 Grounding Controls",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer grounding
+    track: "shared",
+    subtitle: "Restrict which data sources Einstein can access per agent.",
+    tag: "optional",
+    tagLabel: "Advanced",
+    body: `
+      <p class="section-intro">Grounding controls determine what data sources Einstein is allowed to use when generating responses. Review and restrict these per agent to enforce data boundaries.</p>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer → Grounding</strong>.</div></li>
+        <li><div class="step-content">Review the list of connected data sources.</div></li>
+        <li><div class="step-content">For each agent, confirm only the intended data sources are enabled.</div></li>
+        <li><div class="step-content">Disable any data sources that should not be accessible to a given agent.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
+    sectionNum: "B",
+    title: "B.3 Data Masking",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer data masking
+    track: "shared",
+    subtitle: "Prevent sensitive field values from being sent to the LLM.",
+    tag: "optional",
+    tagLabel: "Advanced",
+    body: `
+      <p class="section-intro">Data Masking prevents sensitive field values (e.g. SSNs, financial data) from being sent to the LLM in prompts. Use this section to add custom rules beyond the defaults set in Section 1.4.</p>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer → Data Masking</strong>.</div></li>
+        <li><div class="step-content">Confirm masking is enabled (set in Section 1.4).</div></li>
+        <li><div class="step-content">To add custom masking rules, click <strong>New Masking Rule</strong>.</div></li>
+        <li><div class="step-content">Specify the object, field, and masking pattern (e.g. mask all but last 4 digits of a phone number).</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
+    sectionNum: "B",
+    title: "B.4 Audit Trail",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer audit trail
+    track: "shared",
+    subtitle: "Verify interaction logging is active and configure log exports.",
+    tag: "optional",
+    tagLabel: "Advanced",
+    body: `
+      <p class="section-intro">The Audit Trail logs all Einstein interactions — prompts sent, responses returned, and actions executed. Logs can be exported manually or queried via SOQL for integration with external compliance tools.</p>
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer → Audit Trail</strong>.</div></li>
+        <li><div class="step-content">Confirm logging is enabled.</div></li>
+        <li><div class="step-content">To export logs, click <strong>Export</strong> and select a date range.</div></li>
+        <li><div class="step-content">Logs can also be queried via SOQL from the <code>EinsteinLlmAuditEvent</code> object for integration with external SIEM or compliance tools.</div></li>
+      </ol>
+    `
+  }
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const state = {
+  current: 0,
+  activeTrack: 'sales',
+  unlockedCompletion: { sales: false, employee: false, service: false }
+};
+
+const TRACK_COLORS = {
+  sales:    '#0070D2',
+  employee: '#7B5EA7',
+  service:  '#2E844A',
+  shared:   '#54698D'
+};
+
+function getSequence() {
+  return cards.reduce((acc, c, i) => {
+    if (c.isCompletion && !state.unlockedCompletion[c.track]) return acc;
+    if (c.track === 'shared' || c.track === state.activeTrack) acc.push(i);
+    return acc;
+  }, []);
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render() {
+  const cardArea = document.getElementById('cardArea');
+  const sidebar  = document.getElementById('sidebar');
+
+  // Build cards
+  cardArea.innerHTML = cards.map((c, i) => {
+    const isIntro = c.isIntro;
+    const numLabel = c.sectionNum;
+    const tagHTML = c.tag ? `<span class="tag ${c.tag}">${c.tagLabel}</span>` : '';
+    const trackClass = c.track ? 'track-' + c.track : '';
+
+    const th = c.trailhead;
+    const thHref = th ? (typeof th === 'string' ? th : th.url) : '';
+    const thLabel = (th && typeof th === 'object' && th.label) ? th.label : 'Trailhead';
+    const trailheadHTML = th
+      ? `<a class="th-link" href="${thHref}" target="_blank" rel="noopener">📖 ${thLabel} ↗</a>`
+      : '';
+
+    const headerHTML = c.isCompletion ? '' : `
+        <div class="card-header">
+          <div class="card-num">${numLabel || '★'}</div>
+          <div class="card-header-text">
+            <h2>${c.title}${tagHTML}</h2>
+            <div class="sub">${c.subtitle || ''}</div>
+          </div>
+          ${trailheadHTML}
+        </div>
+    `;
+
+    return `
+      <div class="breadcrumb" id="breadcrumb-${i}" style="display:none;">
+        <span class="section-pill">${c.sectionLabel}</span>
+      </div>
+      <div class="card ${i === 0 ? 'visible' : ''} ${isIntro ? 'intro-card' : ''} ${trackClass}" id="card-${i}">
+        ${headerHTML}
+        <div class="card-body">${c.body}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Build sidebar
+  let sidebarHTML = '';
+  let lastSection = '';
+  cards.forEach((c, i) => {
+    if (c.sectionLabel !== lastSection) {
+      if (lastSection !== '') sidebarHTML += '</div>';
+      const grpTrack = c.track || 'shared';
+      const isAppendix = ['A','B'].includes(c.sectionNum);
+      sidebarHTML += `
+        <div class="nav-section-group track-${grpTrack}" id="grp-${i}" data-track="${grpTrack}">
+          <div class="nav-section-header">
+            <div class="nav-section-num ${isAppendix ? 'appendix' : ''}">${c.sectionNum || '★'}</div>
+            <span>${c.sectionLabel.replace(/^(Section \d+: |Appendix [AB]: )/, '')}</span>
+          </div>
+      `;
+      lastSection = c.sectionLabel;
+    }
+    const completionClass = c.isCompletion ? ' completion-nav-item' : '';
+    sidebarHTML += `
+      <div class="nav-item track-${c.track || 'shared'}${completionClass}" id="nav-${i}" onclick="goTo(${i})">
+        <div class="nav-dot"></div>
+        <span>${c.title.replace(/^\d+\.\d+\s|^[AB]\.\d+\s/, '')}</span>
+        <span class="nav-check" id="nav-check-${i}"></span>
+      </div>
+    `;
+  });
+  sidebarHTML += '</div>';
+  sidebar.innerHTML = sidebarHTML;
+
+  updateUI();
+}
+
+function updateUI() {
+  const seq = getSequence();
+  const pos = seq.indexOf(state.current);
+  const total = seq.length;
+  const curTrack = cards[state.current].track;
+
+  // Show only current card + breadcrumb
+  cards.forEach((_, i) => {
+    const card = document.getElementById(`card-${i}`);
+    const bc   = document.getElementById(`breadcrumb-${i}`);
+    const nav  = document.getElementById(`nav-${i}`);
+    if (card) card.classList.toggle('visible', i === state.current);
+    if (bc)   bc.style.display = i === state.current ? 'flex' : 'none';
+    if (nav) {
+      const inSeq = seq.includes(i);
+      const seqPos = seq.indexOf(i);
+      nav.classList.toggle('active', i === state.current);
+      nav.classList.toggle('completed', inSeq && seqPos < pos);
+    }
+  });
+
+  // Sidebar group dimming
+  document.querySelectorAll('.nav-section-group[data-track]').forEach(grp => {
+    const t = grp.dataset.track;
+    const isAgentTrack = ['sales','employee','service'].includes(t);
+    grp.classList.toggle('track-inactive', isAgentTrack && t !== state.activeTrack);
+  });
+
+  // Tab bar visibility + active tab
+  const tabBar = document.getElementById('tabBar');
+  const showTabs = curTrack !== 'shared';
+  tabBar.classList.toggle('visible', showTabs);
+  ['sales','employee','service'].forEach(t => {
+    const btn = document.getElementById('tab-' + t);
+    if (btn) btn.classList.toggle('active', t === state.activeTrack);
+  });
+
+  // Nav footer track color
+  const navFooter = document.querySelector('.nav-footer');
+  navFooter.className = 'nav-footer';
+  if (curTrack !== 'shared') navFooter.classList.add('track-' + state.activeTrack);
+
+  // Scroll the page back to the top so the new card starts at the top of the viewport
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+  // Scroll sidebar item into view
+  const activeNav = document.getElementById(`nav-${state.current}`);
+  if (activeNav) activeNav.scrollIntoView({ block: 'nearest' });
+
+  // Progress
+  const pct = total > 1 ? Math.round((pos / (total - 1)) * 100) : 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Step ${pos + 1} of ${total}`;
+  document.getElementById('cardCounter').textContent = `${pos + 1} / ${total}`;
+
+  // Buttons
+  document.getElementById('btnPrev').disabled = pos === 0;
+  const btnNext = document.getElementById('btnNext');
+  const nextIdx = seq[pos + 1];
+  const nextIsCompletion = nextIdx !== undefined && cards[nextIdx] && cards[nextIdx].isCompletion;
+  if (pos === total - 1) {
+    btnNext.textContent = '✓ Done';
+  } else if (nextIsCompletion) {
+    btnNext.textContent = '🎉 Finish';
+  } else {
+    btnNext.textContent = 'Next →';
+  }
+  btnNext.disabled = false;
+
+  // Fire confetti when arriving on a completion card
+  if (cards[state.current] && cards[state.current].isCompletion) {
+    fireConfetti();
+  }
+}
+
+function navigate(dir) {
+  const seq = getSequence();
+  const pos = seq.indexOf(state.current);
+  const next = pos + dir;
+  if (next >= 0 && next < seq.length) {
+    state.current = seq[next];
+    updateUI();
+  }
+}
+
+function goTo(i) {
+  // If navigating to an agent card, update activeTrack to match
+  const t = cards[i].track;
+  if (['sales','employee','service'].includes(t)) state.activeTrack = t;
+  state.current = i;
+  updateUI();
+}
+
+function switchTrack(track) {
+  if (track === state.activeTrack) return;
+  const wasAgentCard = ['sales','employee','service'].includes(cards[state.current].track);
+  state.activeTrack = track;
+  if (wasAgentCard) {
+    const first = cards.findIndex(c => c.track === track);
+    if (first !== -1) state.current = first;
+  }
+  updateUI();
+}
+
+function chooseTrack(track) {
+  state.activeTrack = track;
+  const firstSec1 = cards.findIndex(c => c.sectionNum === "1" && c.track === "shared");
+  if (firstSec1 !== -1) state.current = firstSec1;
+  updateUI();
+}
+
+function startAgentTrack(track) {
+  state.activeTrack = track;
+  const first = cards.findIndex(c => c.track === track);
+  if (first !== -1) state.current = first;
+  updateUI();
+}
+
+function copyCard(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Init
+render();
+
+// Convert ol.steps items to interactive checkboxes
+(function() {
+  let uid = 0;
+  document.querySelectorAll('ol.steps').forEach(ol => ol.classList.add('steps-interactive'));
+  document.querySelectorAll('ol.steps > li').forEach(li => {
+    const id = 'step-cb-' + (uid++);
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = id;
+    cb.className = 'step-check';
+    cb.addEventListener('change', function() {
+      li.classList.toggle('step-done', cb.checked);
+    });
+    const content = li.querySelector('.step-content');
+    const label = document.createElement('label');
+    label.htmlFor = id;
+    label.className = 'step-content';
+    label.innerHTML = content ? content.innerHTML : '';
+    li.innerHTML = '';
+    li.appendChild(cb);
+    li.appendChild(label);
+  });
+})();
+
+// Update sidebar completion indicators in real time
+(function() {
+  function updateSectionCompletion(cardEl) {
+    const idx = cardEl.id.replace('card-', '');
+    const navItem = document.getElementById('nav-' + idx);
+    if (!navItem) return;
+    const boxes = cardEl.querySelectorAll('input[type="checkbox"]');
+    if (boxes.length === 0) {
+      navItem.classList.remove('section-complete');
+      return;
+    }
+    const allChecked = Array.from(boxes).every(b => b.checked);
+    navItem.classList.toggle('section-complete', allChecked);
+  }
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('change', e => {
+      if (e.target && e.target.matches('input[type="checkbox"]')) {
+        updateSectionCompletion(card);
+        checkTrackCompletion(card);
+      }
+    });
+    updateSectionCompletion(card);
+  });
+})();
+
+// Confetti burst — Salesforce brand colors
+let confettiActive = false;
+function fireConfetti() {
+  if (confettiActive) return;
+  confettiActive = true;
+
+  const colors = ['#0070D2', '#FFFFFF', '#2E844A', '#F2CF5B'];
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  document.body.appendChild(layer);
+
+  const COUNT = 90;
+  for (let i = 0; i < COUNT; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const startLeft = Math.random() * 100;             // vw
+    const drift = (Math.random() * 200 - 100);          // -100 to +100 px lateral drift
+    const duration = 3 + Math.random() * 1.2;           // 3.0–4.2s
+    const delay = Math.random() * 0.4;                  // small stagger
+    const w = 6 + Math.random() * 8;                    // 6–14px
+    const h = 10 + Math.random() * 10;                  // 10–20px
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.left = startLeft + 'vw';
+    piece.style.width = w + 'px';
+    piece.style.height = h + 'px';
+    piece.style.background = color;
+    piece.style.borderRadius = Math.random() < 0.3 ? '50%' : '2px';
+    piece.style.animationDuration = duration + 's';
+    piece.style.animationDelay = delay + 's';
+    piece.style.setProperty('--drift', drift + 'px');
+    layer.appendChild(piece);
+  }
+
+  setTimeout(() => {
+    layer.remove();
+    confettiActive = false;
+  }, 4500);
+}
+
+// Inject Check All / Uncheck All toolbars above every checkbox list
+(function() {
+  // A "list" for our purposes is any ol.steps or ul.checklist that contains checkboxes.
+  const lists = document.querySelectorAll('ol.steps, ul.checklist');
+
+  lists.forEach((list, idx) => {
+    const boxes = list.querySelectorAll('input[type="checkbox"]');
+    if (boxes.length === 0) return;
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'check-all-toolbar';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'check-all-btn';
+    btn.dataset.listId = 'check-all-' + idx;
+    list.dataset.checkAllId = btn.dataset.listId;
+    toolbar.appendChild(btn);
+    list.parentNode.insertBefore(toolbar, list);
+
+    function syncLabel() {
+      const items = list.querySelectorAll('input[type="checkbox"]');
+      const allChecked = items.length > 0 && Array.from(items).every(b => b.checked);
+      btn.textContent = allChecked ? 'Uncheck All' : 'Check All';
+    }
+
+    btn.addEventListener('click', () => {
+      const items = list.querySelectorAll('input[type="checkbox"]');
+      const allChecked = Array.from(items).every(b => b.checked);
+      const target = !allChecked;
+      items.forEach(b => {
+        if (b.checked !== target) {
+          b.checked = target;
+          // Dispatch a real change event so the existing section-complete tracker
+          // and the completion-gate (checkTrackCompletion) both react.
+          b.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
+      syncLabel();
+    });
+
+    list.addEventListener('change', e => {
+      if (e.target && e.target.matches('input[type="checkbox"]')) syncLabel();
+    });
+
+    syncLabel();
+  });
+})();
+
+function checkTrackCompletion(changedCardEl) {
+  const idx = parseInt(changedCardEl.id.replace('card-', ''), 10);
+  const track = cards[idx] && cards[idx].track;
+  if (!['sales','employee','service'].includes(track)) return;
+
+  // Every non-completion card in this track must have its sidebar nav item
+  // marked section-complete. Cards without checkboxes are skipped.
+  const trackIndices = cards
+    .map((c, i) => ({ c, i }))
+    .filter(x => x.c.track === track && !x.c.isCompletion);
+
+  const allDone = trackIndices.every(({ c, i }) => {
+    const cardEl = document.getElementById('card-' + i);
+    if (!cardEl) return false;
+    const boxes = cardEl.querySelectorAll('input[type="checkbox"]');
+    if (boxes.length === 0) return true; // cards with no checkboxes are auto-complete
+    return Array.from(boxes).every(b => b.checked);
+  });
+
+  if (allDone && !state.unlockedCompletion[track]) {
+    state.unlockedCompletion[track] = true;
+    // Reveal the completion nav-item
+    const compIdx = cards.findIndex(c => c.isCompletion && c.track === track);
+    if (compIdx !== -1) {
+      const navItem = document.getElementById('nav-' + compIdx);
+      if (navItem) navItem.classList.add('completion-unlocked');
+    }
+    updateUI();
+  } else if (!allDone && state.unlockedCompletion[track]) {
+    state.unlockedCompletion[track] = false;
+    const compIdx = cards.findIndex(c => c.isCompletion && c.track === track);
+    if (compIdx !== -1) {
+      const navItem = document.getElementById('nav-' + compIdx);
+      if (navItem) navItem.classList.remove('completion-unlocked');
+      // If the user is currently *on* the completion card, bounce them off it
+      if (state.current === compIdx) state.current = compIdx - 1;
+    }
+    updateUI();
+  }
+}
+</script>
+</body>
+</html>
