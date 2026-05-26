@@ -82,7 +82,7 @@
       flex-shrink: 0;
       background: white;
       border-right: 1px solid var(--sf-border);
-      padding: 16px 0 40px;
+      padding: 16px 0 120px;
       position: sticky;
       top: 0;
       max-height: calc(100vh - 80px);
@@ -387,6 +387,14 @@
     ol.steps.steps-interactive li::before { display: none; }
     ol.steps.steps-interactive { counter-reset: none; }
     ol.steps.steps-interactive li { counter-increment: none; }
+
+    .inline-icon {
+      display: inline-block;
+      height: 22px;
+      width: auto;
+      vertical-align: middle;
+      margin: 0 4px;
+    }
 
     /* ── Step checkboxes ── */
     ol.steps li .step-check {
@@ -696,7 +704,7 @@
     .nav-section-group.track-employee .nav-section-header { border-left: 3px solid var(--track-employee); }
     .nav-section-group.track-service  .nav-section-header { border-left: 3px solid var(--track-service); }
 
-    .nav-section-group.track-inactive { opacity: 0.32; pointer-events: none; }
+    /* Non-active agent tracks remain fully clickable; no dim or lock state. */
 
     .nav-item.active.track-sales    { border-left-color: var(--track-sales);    color: var(--track-sales); }
     .nav-item.active.track-employee { border-left-color: var(--track-employee); color: var(--track-employee); }
@@ -948,19 +956,19 @@ const cards = [
           <img class="preview-img" src="" alt="Sales Agent — illustration of a Salesforce rep using AI for account management" />
           <div class="preview-emoji">💼</div>
           <h3>Sales Agent</h3>
-          <p>Account summaries, follow-up emails, opportunity updates, call logging.</p>
+          <p>This agent helps sales reps manage their accounts.</p>
         </div>
         <div class="preview-card">
           <img class="preview-img" src="" alt="Employee Agent — illustration of an internal assistant helping with HR and process questions" />
           <div class="preview-emoji">🤖</div>
           <h3>Employee Agent</h3>
-          <p>Internal process lookup, policy Q&amp;A, task creation, documentation delivery.</p>
+          <p>This agent helps employees look up internal processes and take follow-up actions.</p>
         </div>
         <div class="preview-card">
           <img class="preview-img" src="" alt="Service Agent — illustration of a customer support agent deflecting cases and escalating to humans" />
           <div class="preview-emoji">🎧</div>
           <h3>Service Agent</h3>
-          <p>Case deflection, knowledge search, escalation to human agents, chat channel.</p>
+          <p>This agent supports service workflows, grounded in your data library.</p>
         </div>
       </div>
     `
@@ -1094,13 +1102,9 @@ const cards = [
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Generative AI Quick Start
     body: `
-      <div class="callout note"><span class="callout-icon">ℹ️</span><span>No additional model configuration is required for this workshop. The default Salesforce Einstein model is used for both agents.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Einstein Generative AI</strong>.</div></li>
-        <li><div class="step-content">Toggle <strong>Enable Einstein Generative AI</strong> to on.</div></li>
-        <li><div class="step-content">Accept the Einstein Generative AI Terms of Service if prompted.</div></li>
-        <li><div class="step-content">Navigate to <strong>Setup → Einstein Generative AI → AI Models</strong>.</div></li>
-        <li><div class="step-content">Confirm the default <strong>Salesforce Einstein</strong> model is listed and has a status of <strong>Active</strong>.</div></li>
+        <li><div class="step-content">Go to <strong>Setup → Einstein generative AI → Einstein Setup</strong>.</div></li>
+        <li><div class="step-content">Enable <strong>Einstein Setup</strong> to on.</div></li>
       </ol>
     `
   },
@@ -1112,12 +1116,9 @@ const cards = [
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud Quick Start
     body: `
-      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Data Stream ingestion and Data Model Object mapping are covered in <strong>Appendix A</strong>. Complete those steps to enable agent grounding in Data Cloud — this can be done after the workshop.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Data Cloud</strong>.</div></li>
+        <li><div class="step-content">Go to <strong>Setup → Data Cloud Setup Home</strong>.</div></li>
         <li><div class="step-content">Click <strong>Get Started</strong> if Data Cloud has not been initialized, or confirm the status shows <strong>Active</strong>.</div></li>
-        <li><div class="step-content">Verify your Data Cloud org is connected by checking that the <strong>Data Cloud Setup</strong> home page loads without errors.</div></li>
-        <li><div class="step-content">Confirm at least one <strong>Data Space</strong> exists (a default Data Space is created automatically on provisioning).</div></li>
       </ol>
     `
   },
@@ -1129,11 +1130,11 @@ const cards = [
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Setup trail
     body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>If the <strong>Agents</strong> menu item is not visible in Setup, confirm the Agentforce license is provisioned (Section 0.1) and that Einstein Generative AI is enabled (Step 1.1).</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Agents</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Enable Agentforce</strong>.</div></li>
-        <li><div class="step-content">Confirm the Agents setup page loads and shows the option to create a new agent.</div></li>
+        <li><div class="step-content">Go to <strong>Setup → Agentforce &amp; GenAI</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Get Started with Einstein Generative AI</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate Agentforce</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Go To Agent Studio</strong> → turn on <strong>Agentforce Agent</strong>.</div></li>
       </ol>
     `
   },
@@ -1141,17 +1142,15 @@ const cards = [
     sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
     sectionNum: "1",
     title: "1.4 Verify Einstein Trust Layer",
-    subtitle: "Confirm data masking and audit logging are active.",
+    subtitle: "Confirm data masking is active.",
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer trail
     body: `
-      <p class="section-intro">The Einstein Trust Layer is enabled automatically when Einstein Generative AI is turned on. Verify the configuration is active before building agents.</p>
       <div class="callout note"><span class="callout-icon">ℹ️</span><span>Full Trust Layer configuration options, including zero data retention and grounding controls, are covered in <strong>Appendix B</strong>.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer</strong>.</div></li>
-        <li><div class="step-content">Confirm <strong>Data Masking</strong> is set to on — this prevents sensitive field data from being sent to the LLM.</div></li>
-        <li><div class="step-content">Confirm <strong>Audit Trail</strong> is enabled — this logs all Einstein interactions for your org.</div></li>
-        <li><div class="step-content">Review the <strong>Toxicity Detection</strong> setting and enable if required by your organization's policy.</div></li>
+        <li><div class="step-content">Go to <strong>Setup → Einstein Setup</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Go To Einstein Trust Layer</strong>.</div></li>
+        <li><div class="step-content">Confirm <strong>Large Language Model Data Masking</strong> is set to on.</div></li>
       </ol>
     `
   },
@@ -1166,206 +1165,86 @@ const cards = [
     body: `
       <p class="section-intro">You've finished the shared prerequisites and platform configuration. From here, the workshop branches by agent type. Pick the track that matches what you're building — you can switch tabs at any time using the agent tabs at the top of the page.</p>
       <div class="agent-chooser">
-        <div class="chooser-card cs-sales" onclick="startAgentTrack('sales')">
-          <div class="chooser-icon">💼</div>
-          <h3>Sales Agent</h3>
-          <p>Account summaries, follow-up emails, opportunity updates, call logging.</p>
-          <div class="chooser-cta">Start Sales Setup →</div>
-        </div>
         <div class="chooser-card cs-employee" onclick="startAgentTrack('employee')">
           <div class="chooser-icon">🤖</div>
           <h3>Employee Agent</h3>
-          <p>Internal process lookup, policy Q&amp;A, task creation, documentation delivery.</p>
+          <p>This agent helps employees look up internal processes and take follow-up actions.</p>
           <div class="chooser-cta">Start Employee Setup →</div>
+        </div>
+        <div class="chooser-card cs-sales" onclick="startAgentTrack('sales')">
+          <div class="chooser-icon">💼</div>
+          <h3>Sales Agent</h3>
+          <p>This agent helps sales reps manage their accounts.</p>
+          <div class="chooser-cta">Start Sales Setup →</div>
         </div>
         <div class="chooser-card cs-service" onclick="startAgentTrack('service')">
           <div class="chooser-icon">🎧</div>
           <h3>Service Agent</h3>
-          <p>Case deflection, knowledge search, escalation to human agents, chat channel.</p>
+          <p>This agent supports service workflows, grounded in your data library.</p>
           <div class="chooser-cta">Start Service Setup →</div>
         </div>
       </div>
     `
   },
 
-  // ── SECTION 3 ──
+  // ── SECTION 3 — EMPLOYEE AGENT ──
   {
     sectionLabel: "Section 2: Internal Employee-Facing Agent",
     sectionNum: "2",
     title: "2.1 Create the Agent in Agentforce Studio",
-    subtitle: "Launch Agentforce Studio and create a new Employee Agent.",
+    subtitle: "Launch Agentforce Studio and create a new Employee Agent from the template.",
     track: "employee",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Employee Agent trail
     body: `
       <ol class="steps">
-        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
-        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
+        <li><div class="step-content">Click <img class="inline-icon" src="app%20launcher.png" alt="App Launcher icon" /> to open the <strong>App Launcher</strong>, then search for and select <strong>Agentforce Studio</strong>.</div></li>
         <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
-        <li><div class="step-content">Select <strong>Employee Agent</strong> as the agent type.</div></li>
-        <li><div class="step-content">Enter the following in the creation wizard:
-          <ul>
-            <li><strong>Agent Name:</strong> Internal Process Assistant <em>(or your preferred name)</em></li>
-            <li><strong>Role:</strong> Helps employees find answers to internal process and policy questions and take follow-up actions.</li>
-            <li><strong>Company:</strong> Enter your organization's name to give the agent context.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+        <li><div class="step-content">Find <strong>Agentforce Employee Agent</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Select Template</strong>.</div></li>
+        <li><div class="step-content">For the <strong>Agent Name</strong>, input "<strong>Employee Agent</strong>".</div></li>
+        <li><div class="step-content">For <strong>Developer Name</strong>, "<strong>Employee_Agent</strong>" autopopulates.</div></li>
+        <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
       </ol>
-      <div class="copy-card-wrap">
-        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
-        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
-      </div>
-      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
     `
   },
   {
     sectionLabel: "Section 2: Internal Employee-Facing Agent",
     sectionNum: "2",
-    title: "2.2 Connect Knowledge as a Data Source",
-    subtitle: "Connect Salesforce Knowledge as the agent's information source.",
+    title: "2.2 Create a Subagent From Asset Library",
+    subtitle: "Add prebuilt subagents from the Asset Library and activate the agent.",
     track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce Knowledge Setup
+    trailhead: "https://trailhead.salesforce.com/", // TODO: SubAgents / Asset Library trail
     body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Confirm that published Knowledge Articles exist before this step. Draft articles will not surface in agent responses. See Section 0.4 for the pre-workshop data check.</span></div>
       <ol class="steps">
-        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Data Source → Salesforce Knowledge</strong>.</div></li>
-        <li><div class="step-content">Choose the Data Categories that contain your internal process articles.</div></li>
-        <li><div class="step-content">Set the audience filter to <strong>Internal</strong> to restrict to employee-facing articles only.</div></li>
+        <li><div class="step-content">Hover over the side of <strong>Subagents</strong> — a <strong>+</strong> icon will appear.</div></li>
+        <li><div class="step-content">Click on the <strong>+</strong> icon.</div></li>
+        <li><div class="step-content">Click <strong>Add from Asset Library</strong>.</div></li>
+        <li><div class="step-content">Search <strong>Single Record Summary</strong> Subagent.</div></li>
+        <li><div class="step-content">Click <strong>Select</strong>.</div></li>
+        <li><div class="step-content">Search <strong>General CRM</strong> Subagent.</div></li>
+        <li><div class="step-content">Click <strong>Select</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add to Agent</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Commit Version</strong>.</div></li>
+        <li><div class="step-content">A confirmation screen will appear — click <strong>Commit Version</strong> again.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong>.</div></li>
+        <li><div class="step-content">A confirmation screen will appear — click <strong>Activate</strong> again.</div></li>
       </ol>
     `
   },
   {
     sectionLabel: "Section 2: Internal Employee-Facing Agent",
     sectionNum: "2",
-    title: "2.3 Create a SubAgent: Process Lookup",
-    subtitle: "Define what the agent can talk about and how it should behave.",
+    title: "2.3 Test Employee Agent",
+    subtitle: "Use the built-in Preview to verify the agent's behavior.",
     track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: SubAgents / Topics trail
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
     body: `
-      <p class="section-intro">SubAgents define what the agent can talk about and what actions it can take within that subject area.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test the agent before sharing more broadly.</span></div>
       <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
-        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
-        <li><div class="step-content">Configure the SubAgent:
-          <ul>
-            <li><strong>Name:</strong> Process Lookup</li>
-            <li><strong>Description/Classification:</strong> Handles employee questions about internal processes, policies, and procedures. Routes questions to Knowledge and offers follow-up via email or task.</li>
-            <li><strong>Scope:</strong> Answer questions using only the connected Knowledge sources. Do not speculate beyond published content.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
-          <div class="copy-card-wrap">
-            <div class="code-block">When an employee asks a process or policy question, search the Knowledge base first.
-Summarize the relevant article in plain language. If no article is found, let the
-employee know and offer to create a follow-up task or send available documentation
-via email. Always be concise and professional.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'When an employee asks a process or policy question, search the Knowledge base first.\nSummarize the relevant article in plain language. If no article is found, let the\nemployee know and offer to create a follow-up task or send available documentation\nvia email. Always be concise and professional.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.4 Add Action: Send Email",
-    subtitle: "Allow the agent to send process documentation to employees.",
-    track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Actions: Send Email
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Process Lookup</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Send Email</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>To:</strong> Mapped to the requesting employee's email address</li>
-            <li><strong>Subject:</strong> Agent-generated, based on the process topic discussed</li>
-            <li><strong>Body:</strong> Agent-generated, including a summary of the process and links to relevant Knowledge Articles</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when an employee asks for documentation to be sent to them, or when
-the response references a process document they would benefit from having on record.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when an employee asks for documentation to be sent to them, or when\nthe response references a process document they would benefit from having on record.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.5 Add Action: Create Task",
-    subtitle: "Allow the agent to log follow-up tasks for employees.",
-    track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Actions: Create Task
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Process Lookup</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Create Task</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>Subject:</strong> Agent-generated, summarizing the follow-up needed</li>
-            <li><strong>Assigned To:</strong> Mapped to the employee or relevant team member</li>
-            <li><strong>Due Date:</strong> Optionally set by the agent or confirmed with the employee</li>
-            <li><strong>Description:</strong> Agent-generated, including context from the conversation</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when an employee's request requires a follow-up that cannot be resolved
-immediately, or when they ask to be reminded about a process step at a later date.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when an employee\'s request requires a follow-up that cannot be resolved\nimmediately, or when they ask to be reminded about a process step at a later date.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.6 Configure the Email Channel",
-    subtitle: "Set up the inbound email address employees will use to reach the agent.",
-    track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Email Channel
-    body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure the inbound email address is set up in your org's email configuration before activating. Verify routing with your admin before testing.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Channel → Email</strong>.</div></li>
-        <li><div class="step-content">Configure the following:
-          <ul>
-            <li><strong>Email Address:</strong> The inbound address employees will use (e.g. <code>process-help@yourcompany.com</code>)</li>
-            <li><strong>Routing:</strong> Confirm email routes to Agentforce and not to a human queue by default</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.7 Activate the Agent",
-    subtitle: "Activate and run a quick test before sharing with employees.",
-    track: "employee",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
-    body: `
-      <div class="callout success"><span class="callout-icon">✅</span><span>Test with an internal email before sharing the address with employees.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
-        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
-        <li><div class="step-content">Confirm the activation summary shows the Knowledge data source, both actions, and the Email channel.</div></li>
-        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Preview</strong>.</div></li>
+        <li><div class="step-content">Ask a question to test the agent (e.g. <em>"Find me 'x' record"</em>).</div></li>
+        <li><div class="step-content">Ask the agent to summarize your record.</div></li>
       </ol>
     `
   },
@@ -1397,252 +1276,73 @@ immediately, or when they ask to be reminded about a process step at a later dat
     `
   },
 
-  // ── SECTION 4 ──
+  // ── SECTION 4 — SALES AGENT ──
   {
     sectionLabel: "Section 3: Sales Agent — Account Management",
     sectionNum: "3",
-    title: "3.1 Create the Agent in Agentforce Studio",
-    subtitle: "Launch Agentforce Studio and create a new Service Agent for sales reps.",
+    title: "3.1 Enable Agentforce for Sales",
+    subtitle: "Turn on Account Management and the supporting Sales features in Setup.",
     track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Sales Agent trail
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce for Sales setup
     body: `
-      <div class="callout note"><span class="callout-icon">🔖</span><span><strong>Post-Workshop:</strong> Data Cloud grounding for this agent is covered in Appendix A. The agent uses CRM data only during the workshop.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
-        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
-        <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
-        <li><div class="step-content">Select <strong>Service Agent</strong> as the agent type.</div></li>
-        <li><div class="step-content">Enter the following in the creation wizard:
-          <ul>
-            <li><strong>Agent Name:</strong> Sales Account Management Agent <em>(or your preferred name)</em></li>
-            <li><strong>Role:</strong> Helps sales representatives manage accounts by surfacing CRM insights, drafting follow-up emails, updating opportunity records, and logging activity.</li>
-            <li><strong>Company:</strong> Enter your organization's name.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+        <li><div class="step-content">Go to <strong>Setup</strong>, search <strong>Agentforce Account Management</strong>.</div></li>
+        <li><div class="step-content">Turn on <strong>Account Management</strong>.</div></li>
+        <li><div class="step-content">A confirmation screen will appear, click <strong>Confirm</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Finish Configuring Account Plans</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Turn on Account Research</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Set Up Einstein Conversation Insights</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Set Up Einstein Activity Capture</strong>.</div></li>
       </ol>
-      <div class="copy-card-wrap">
-        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
-        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
-      </div>
-      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
     `
   },
   {
     sectionLabel: "Section 3: Sales Agent — Account Management",
     sectionNum: "3",
-    title: "3.2 Connect CRM Objects as Data Sources",
+    title: "3.2 Configure Sales Agent",
+    subtitle: "Add the Record Research component to the Account page in Lightning App Builder.",
     track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Connect CRM data sources
-    subtitle: "Connect the CRM objects the agent will use to answer rep questions.",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Lightning App Builder trail
     body: `
-      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Data Cloud grounding is not configured during this workshop. See Appendix A to complete that setup after the session.</span></div>
       <ol class="steps">
-        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Data Source → Salesforce CRM</strong>.</div></li>
-        <li><div class="step-content">Add the following objects:
-          <ul>
-            <li><strong>Account</strong> — Name, Owner, Industry, Last Activity Date, Description</li>
-            <li><strong>Contact</strong> — Name, Email, Phone, Account, Title, Last Activity Date</li>
-            <li><strong>Opportunity</strong> — Name, Stage, Close Date, Amount, Account, Owner</li>
-            <li><strong>Task / Activity</strong> — Subject, Description, Activity Date, Related To, Assigned To</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">For each object, set the data access scope to match the rep's sharing model (typically <strong>Owned + Team</strong>).</div></li>
+        <li><div class="step-content">In <strong>Setup</strong>, search <strong>Lightning App Builder</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Account - Default</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Edit</strong>.</div></li>
+        <li><div class="step-content">Search <strong>Record Research</strong> in the left-hand components search bar.</div></li>
+        <li><div class="step-content">Drag &amp; drop <strong>Record Research</strong> to the account page.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.3 Create a SubAgent: Account Management",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Sales SubAgent / Account Management
-    subtitle: "Define the agent's subject area, scope, and behavioral instructions.",
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
-        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
-        <li><div class="step-content">Configure the SubAgent:
-          <ul>
-            <li><strong>Name:</strong> Account Management</li>
-            <li><strong>Description/Classification:</strong> Handles sales rep requests related to account summaries, contact follow-ups, opportunity updates, and activity logging. Uses CRM data only.</li>
-            <li><strong>Scope:</strong> Only use data from the connected CRM objects. Do not speculate beyond what is present in CRM.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
-          <div class="copy-card-wrap">
-            <div class="code-block">When a rep asks about an account, retrieve and summarize the most recent activity
-and any open opportunities. When drafting emails, use CRM context including last
-activity, opportunity stage, and contact details. When updating or creating records,
-confirm key fields with the rep before writing to CRM. When logging a call, capture
-the rep's summary and link it to the relevant account or opportunity.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'When a rep asks about an account, retrieve and summarize the most recent activity\nand any open opportunities. When drafting emails, use CRM context including last\nactivity, opportunity stage, and contact details. When updating or creating records,\nconfirm key fields with the rep before writing to CRM. When logging a call, capture\nthe rep\'s summary and link it to the relevant account or opportunity.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
+        <li><div class="step-content">Click <strong>Activation…</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Remove as Org Default</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Desktop &amp; Phone</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.4 Add Action: Summarize Account",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Get Record / Account
-    subtitle: "Allow the agent to retrieve and surface account details on request.",
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Get Record</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>Object:</strong> Account</li>
-            <li><strong>Fields to Return:</strong> Name, Owner, Industry, Last Activity Date, Open Opportunities (related list), Recent Contacts (related list)</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when a rep asks for a summary of an account, wants to know what's
-happening with a customer, or needs a quick overview before a meeting or call.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks for a summary of an account, wants to know what\'s\nhappening with a customer, or needs a quick overview before a meeting or call.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
+        <li><div class="step-content">Click <strong>Activation…</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Assign as Org Default</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Desktop &amp; Phone</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong> at the top right side again.</div></li>
       </ol>
     `
   },
   {
     sectionLabel: "Section 3: Sales Agent — Account Management",
     sectionNum: "3",
-    title: "3.5 Add Action: Draft Follow-Up Email",
+    title: "3.3 Test Sales Agent",
+    subtitle: "Pick an account with rich activity data and click Research to see results.",
     track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Send Email (sales)
-    subtitle: "Allow the agent to draft and send follow-up emails to contacts.",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
     body: `
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>You'll get the best results if the account has at least one of the following:
+        <ol style="margin: 8px 0 0 20px; padding: 0;">
+          <li>A related account plan</li>
+          <li>Related video or voice call records within the last 30 days</li>
+          <li>Related emails within the last 30 days</li>
+          <li>Notes created or modified within the last 30 days</li>
+          <li>A recent or upcoming event</li>
+        </ol>
+      </span></div>
       <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Send Email</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>To:</strong> Mapped to the Contact's email address from CRM</li>
-            <li><strong>Subject:</strong> Agent-generated, based on the most recent interaction or open opportunity</li>
-            <li><strong>Body:</strong> Agent-generated, referencing CRM context (last activity, opportunity stage, next steps)</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when a rep asks to draft or send a follow-up email to a contact.
-Generate the email using account and opportunity context from CRM.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to draft or send a follow-up email to a contact.\nGenerate the email using account and opportunity context from CRM.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.6 Add Action: Create or Update Opportunity",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Create/Update Record
-    subtitle: "Allow the agent to create new opportunities or update existing ones.",
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">To create a new opportunity, search for and select <strong>Create Record</strong>, set Object to <strong>Opportunity</strong>.</div></li>
-        <li><div class="step-content">To update an existing opportunity, search for and select <strong>Update Record</strong>, set Object to <strong>Opportunity</strong>.</div></li>
-        <li><div class="step-content">Configure inputs for both:
-          <ul>
-            <li><strong>Name, Stage, Close Date, Amount, Account</strong> — agent-generated or rep-confirmed via conversation</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when a rep asks to log a new opportunity or update an existing one.
-Confirm key fields (stage, close date, amount) with the rep before writing to CRM.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to log a new opportunity or update an existing one.\nConfirm key fields (stage, close date, amount) with the rep before writing to CRM.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.7 Add Action: Log a Call or Activity",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Create Task (sales)
-    subtitle: "Allow the agent to log completed calls and activities against CRM records.",
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Account Management</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Create Task</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>Subject:</strong> Agent-generated or rep-provided (e.g. "Call with [Contact Name]")</li>
-            <li><strong>Type:</strong> Call</li>
-            <li><strong>Status:</strong> Completed</li>
-            <li><strong>Description:</strong> Agent-generated summary based on rep input</li>
-            <li><strong>Related To:</strong> Mapped to the relevant Account or Opportunity</li>
-            <li><strong>Assigned To:</strong> Mapped to the rep</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when a rep asks to log a call, meeting, or activity against an
-account or opportunity. Capture the summary from the rep's description.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when a rep asks to log a call, meeting, or activity against an\naccount or opportunity. Capture the summary from the rep\'s description.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.8 Configure the Email Channel",
-    subtitle: "Set up the inbound email address sales reps will use to reach the agent.",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Email Channel
-    body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure the inbound email address is set up in your org's email configuration before activating. Verify routing with your admin before testing.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Channel → Email</strong>.</div></li>
-        <li><div class="step-content">Configure the following:
-          <ul>
-            <li><strong>Email Address:</strong> The inbound address sales reps will use (e.g. <code>sales-agent@yourcompany.com</code>)</li>
-            <li><strong>Routing:</strong> Confirm email routes to Agentforce and not to a human queue by default</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.9 Activate the Agent",
-    subtitle: "Activate and run a test before sharing with the sales team.",
-    track: "sales",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
-    body: `
-      <div class="callout success"><span class="callout-icon">✅</span><span>Send a test email from a rep's inbox before sharing with the broader sales team. Verify the agent retrieves account data and that actions write back to CRM correctly.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
-        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
-        <li><div class="step-content">Confirm the activation summary shows the CRM data sources, all four actions, and the Email channel.</div></li>
-        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+        <li><div class="step-content">Choose an account record you want to test.</div></li>
+        <li><div class="step-content">Click <strong>Research</strong> in the account.</div></li>
       </ol>
     `
   },
@@ -1670,7 +1370,8 @@ account or opportunity. Capture the summary from the rep's description.</div>
       <div class="completion-cta">
         <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
       </div>
-      <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
+      <p style="font-size: 13px; color: var(--sf-muted); font-style: italic; margin-bottom: 10px;">Your Sales Agent uses Data Cloud to power account summaries and CRM insights — setting up a Data Stream will unlock its full potential.</p>
+      <button class="completion-back" onclick="goToAppendixA()">Next: Data Cloud Advanced Setup →</button>
     `
   },
 
@@ -1679,173 +1380,54 @@ account or opportunity. Capture the summary from the rep's description.</div>
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
     title: "4.1 Create the Agent in Agentforce Studio",
-    subtitle: "Launch Agentforce Studio and create a new Service Agent.",
+    subtitle: "Launch Agentforce Studio and create a new Service Agent from the template.",
     track: "service",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Service Agent trail
     body: `
       <ol class="steps">
-        <li><div class="step-content">Open the <strong>App Launcher</strong> and search for <strong>Agentforce Studio</strong>.</div></li>
-        <li><div class="step-content">Click the <strong>Agents</strong> tab in the left navigation.</div></li>
+        <li><div class="step-content">Click <img class="inline-icon" src="app%20launcher.png" alt="App Launcher icon" /> to open the <strong>App Launcher</strong>, then search for and select <strong>Agentforce Studio</strong>.</div></li>
         <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
-        <li><div class="step-content">Select <strong>Service Agent</strong> as the agent type.</div></li>
-        <li><div class="step-content">Enter the following in the creation wizard:
-          <ul>
-            <li><strong>Agent Name:</strong> Customer Support Agent <em>(or your preferred name)</em></li>
-            <li><strong>Role:</strong> Helps customers resolve support questions, search knowledge, and escalate to a human agent when needed.</li>
-            <li><strong>Company:</strong> Enter your organization's name.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Click <strong>Create</strong>. Agent Builder opens.</div></li>
+        <li><div class="step-content">Find <strong>Agentforce Service Agent</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Select Template</strong>.</div></li>
+        <li><div class="step-content">For the <strong>Agent Name</strong>, add <strong>Service Agent</strong>.</div></li>
+        <li><div class="step-content">For <strong>Developer Name</strong>, <strong>Service_Agent</strong> autopopulates.</div></li>
+        <li><div class="step-content">Confirm the user record assigned is <strong>New User</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
       </ol>
-      <div class="copy-card-wrap">
-        <div class="code-block">You are a <span class="placeholder">[Sales/HR/Support]</span> assistant for <span class="placeholder">[YOUR COMPANY NAME]</span>. You help <span class="placeholder">[YOUR TEAM/ROLE]</span> with <span class="placeholder">[YOUR USE CASE]</span>.</div>
-        <button class="copy-btn" onclick="copyCard(this, 'You are a [Sales/HR/Support] assistant for [YOUR COMPANY NAME]. You help [YOUR TEAM/ROLE] with [YOUR USE CASE].')">Copy</button>
-      </div>
-      <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
     `
   },
   {
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
-    title: "4.2 Connect Knowledge as a Data Source",
-    subtitle: "Connect Salesforce Knowledge as the agent's primary information source.",
+    title: "4.2 Connect Your Data Library",
+    subtitle: "Ground the agent's responses by connecting a data library.",
     track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce Knowledge for Service
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
     body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Confirm that published Knowledge Articles exist before this step. Draft articles will not surface in agent responses. See Section 0.4 for the pre-workshop data check.</span></div>
       <ol class="steps">
-        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Data Source → Salesforce Knowledge</strong>.</div></li>
-        <li><div class="step-content">Choose the Data Categories that contain your customer-facing support articles.</div></li>
-        <li><div class="step-content">Set the audience filter to <strong>External</strong> to surface customer-facing articles only.</div></li>
+        <li><div class="step-content">Click <strong>Data</strong> on the left hand bar.</div></li>
+        <li><div class="step-content">Click <strong>Data Library</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Select a library…</strong>.</div></li>
+        <li><div class="step-content">Connect your data library from the dropdown options.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Commit Version</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong> again.</div></li>
       </ol>
     `
   },
   {
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
-    title: "4.3 Create a SubAgent: Case Deflection",
-    subtitle: "Define the agent's scope for handling support questions.",
+    title: "4.3 Test Service Agent",
+    subtitle: "Use the built-in Preview to verify the agent's behavior.",
     track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Case Deflection / SubAgents
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
     body: `
-      <p class="section-intro">SubAgents define what the agent can talk about and what actions it can take within that subject area.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test the agent before going live.</span></div>
       <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click the <strong>SubAgents</strong> tab.</div></li>
-        <li><div class="step-content">Click <strong>New SubAgent</strong>.</div></li>
-        <li><div class="step-content">Configure the SubAgent:
-          <ul>
-            <li><strong>Name:</strong> Case Deflection</li>
-            <li><strong>Description/Classification:</strong> Handles customer support questions by searching Knowledge and offering resolution steps. Escalates to a human agent if unresolved.</li>
-            <li><strong>Scope:</strong> Answer questions using only the connected Knowledge sources. Do not speculate beyond published content.</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Under <strong>Instructions</strong>, enter behavioral guidance:
-          <div class="copy-card-wrap">
-            <div class="code-block">When a customer asks a support question, search the Knowledge base first.
-Summarize the relevant article in plain language. If no article resolves
-the issue, offer to escalate to a human agent. Always confirm the customer's
-issue is resolved before closing the conversation.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'When a customer asks a support question, search the Knowledge base first.\nSummarize the relevant article in plain language. If no article resolves\nthe issue, offer to escalate to a human agent. Always confirm the customer\'s\nissue is resolved before closing the conversation.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.4 Add Action: Search Knowledge",
-    subtitle: "Allow the agent to search and return Knowledge Articles.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent Action: Search Knowledge
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Case Deflection</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Search Knowledge</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>Query:</strong> Derived from the customer's message</li>
-            <li><strong>Audience:</strong> External</li>
-            <li><strong>Max Results:</strong> 3</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action whenever a customer asks a product or support question.
-Return the most relevant article summary and a link if available.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action whenever a customer asks a product or support question.\nReturn the most relevant article summary and a link if available.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.5 Add Action: Escalate to Human Agent",
-    subtitle: "Route unresolved cases to a human support rep.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Transfer to Agent / escalation
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Inside the <strong>Case Deflection</strong> SubAgent, click <strong>This SubAgent's Actions → Add Action</strong>.</div></li>
-        <li><div class="step-content">Search for and select <strong>Transfer to Agent</strong>.</div></li>
-        <li><div class="step-content">Configure the action inputs:
-          <ul>
-            <li><strong>Queue:</strong> The human support queue for your org</li>
-            <li><strong>Transfer Message:</strong> Agent-generated summary of the customer's issue</li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Add action instructions:
-          <div class="copy-card-wrap">
-            <div class="code-block">Use this action when the customer's issue cannot be resolved using Knowledge,
-or when the customer explicitly requests a human agent.</div>
-            <button class="copy-btn" onclick="copyCard(this, 'Use this action when the customer\'s issue cannot be resolved using Knowledge,\nor when the customer explicitly requests a human agent.')">Copy</button>
-          </div>
-          <p class="copy-hint">This is your starting point — replace the placeholders with your company's specific details after the workshop.</p>
-        </div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.6 Configure the Chat Channel",
-    subtitle: "Set up Messaging for In-App and Web so customers can reach the agent.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Messaging for In-App and Web
-    body: `
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Ensure a Messaging for In-App and Web deployment is configured in your org before activating this channel.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Channels</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Channel → Messaging for In-App and Web</strong>.</div></li>
-        <li><div class="step-content">Select the Messaging deployment to associate with this agent.</div></li>
-        <li><div class="step-content">Confirm routing is set to <strong>Agentforce</strong> (not a human queue) as the first responder.</div></li>
-        <li><div class="step-content">Click <strong>Activate Channel</strong>.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.7 Activate the Agent",
-    subtitle: "Activate and run a test conversation before going live.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Activate an Agent trail
-    body: `
-      <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test a conversation before activating on the live channel.</span></div>
-      <ol class="steps">
-        <li><div class="step-content">In Agent Builder, click <strong>Activate</strong> in the top-right corner.</div></li>
-        <li><div class="step-content">If a <strong>Configuration Issues Detected</strong> warning appears, review each item — click <strong>Ignore &amp; Activate</strong> if the issues are non-blocking.</div></li>
-        <li><div class="step-content">Confirm the activation summary shows the Knowledge data source, both actions, and the Chat channel.</div></li>
-        <li><div class="step-content">Click <strong>Confirm Activation</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Preview</strong>.</div></li>
+        <li><div class="step-content">Ask a question to test the agent.</div></li>
       </ol>
     `
   },
@@ -1874,170 +1456,6 @@ or when the customer explicitly requests a human agent.</div>
         <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
       </div>
       <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
-    `
-  },
-
-  // ── SECTION 5 ──
-  {
-    sectionLabel: "Section 5: Testing & Validation",
-    sectionNum: "4",
-    title: "4.1 Test: Internal Employee-Facing Agent",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Testing & validation trail
-    subtitle: "Send test emails and verify response, knowledge retrieval, and actions.",
-    body: `
-      <p class="section-intro">Send test emails to the configured inbound address and verify the following.</p>
-      <div class="sub-label">Agent Response</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t1"><label for="t1">Agent replies to an inbound email within a reasonable time</label></li>
-        <li><input type="checkbox" id="t2"><label for="t2">Response is relevant to the question asked</label></li>
-        <li><input type="checkbox" id="t3"><label for="t3">Response cites or references a Knowledge Article where applicable</label></li>
-        <li><input type="checkbox" id="t4"><label for="t4">Agent does not fabricate information not present in Knowledge</label></li>
-      </ul>
-      <div class="sub-label">Send Email Action</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t5"><label for="t5">Agent offers to send documentation when appropriate</label></li>
-        <li><input type="checkbox" id="t6"><label for="t6">Email is delivered to the correct address</label></li>
-        <li><input type="checkbox" id="t7"><label for="t7">Email body includes relevant process content</label></li>
-      </ul>
-      <div class="sub-label">Create Task Action</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t8"><label for="t8">Agent offers to create a task when a follow-up is needed</label></li>
-        <li><input type="checkbox" id="t9"><label for="t9">Task appears in Salesforce with correct Subject, Assigned To, and Description</label></li>
-        <li><input type="checkbox" id="t10"><label for="t10">Task is linked to the correct record where applicable</label></li>
-      </ul>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Testing & Validation",
-    sectionNum: "4",
-    title: "4.2 Test: Sales Agent — Account Management",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Sales Agent testing trail
-    subtitle: "Send test emails using real account and rep context from your org.",
-    body: `
-      <div class="sub-label">Agent Response</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t11"><label for="t11">Agent replies to an inbound email within a reasonable time</label></li>
-        <li><input type="checkbox" id="t12"><label for="t12">Response draws from CRM data (Account, Contact, Opportunity, Activity)</label></li>
-        <li><input type="checkbox" id="t13"><label for="t13">Agent does not return data outside the rep's sharing model</label></li>
-      </ul>
-      <div class="sub-label">Summarize Account</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t14"><label for="t14">Agent returns an accurate account summary when asked</label></li>
-        <li><input type="checkbox" id="t15"><label for="t15">Summary includes recent activity and open opportunities</label></li>
-      </ul>
-      <div class="sub-label">Draft Follow-Up Email</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t16"><label for="t16">Agent drafts an email relevant to the account context</label></li>
-        <li><input type="checkbox" id="t17"><label for="t17">Email is addressed to the correct Contact</label></li>
-        <li><input type="checkbox" id="t18"><label for="t18">Email is delivered successfully</label></li>
-      </ul>
-      <div class="sub-label">Create / Update Opportunity</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t19"><label for="t19">Agent creates a new Opportunity record in CRM with correct field values</label></li>
-        <li><input type="checkbox" id="t20"><label for="t20">Agent updates an existing Opportunity when asked</label></li>
-        <li><input type="checkbox" id="t21"><label for="t21">Agent confirms key fields with the rep before writing to CRM</label></li>
-      </ul>
-      <div class="sub-label">Log a Call / Activity</div>
-      <ul class="checklist">
-        <li><input type="checkbox" id="t22"><label for="t22">Task is created in CRM with Type = Call and Status = Completed</label></li>
-        <li><input type="checkbox" id="t23"><label for="t23">Task is linked to the correct Account or Opportunity</label></li>
-        <li><input type="checkbox" id="t24"><label for="t24">Description reflects the rep's input</label></li>
-      </ul>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Testing & Validation",
-    sectionNum: "4",
-    title: "4.3 Issues & Follow-Up Log",
-    track: "shared",
-    subtitle: "Capture anything that needs attention after the workshop.",
-    body: `
-      <p class="section-intro">Use this table to log any issues that come up during testing.</p>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Issue</th><th>Agent</th><th>Priority</th><th>Owner</th></tr></thead>
-        <tbody>
-          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        </tbody>
-      </table></div>
-    `
-  },
-
-  // ── SECTION 6 ──
-  {
-    sectionLabel: "Section 5: Deployment & Enablement",
-    sectionNum: "5",
-    title: "5.1 Access & Permissions Rollout",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Sets / rollout trail
-    subtitle: "Assign the right access before rolling out to users.",
-    body: `
-      <p class="section-intro">Before users can interact with the agents, the right permissions need to be in place.</p>
-      <div class="sub-label">Common approaches</div>
-      <ul class="bullets">
-        <li>Create a Permission Set specific to each agent and assign it to the target user group</li>
-        <li>Use Permission Set Groups to bundle agent access with other related permissions</li>
-        <li>Roll out in phases — start with a pilot group, validate behavior, then expand</li>
-      </ul>
-      <div class="sub-label">Typical steps</div>
-      <ol class="steps">
-        <li><div class="step-content">Identify the pilot user group</div></li>
-        <li><div class="step-content">Assign the relevant Permission Set</div></li>
-        <li><div class="step-content">Share the agent's inbound email address with the group</div></li>
-        <li><div class="step-content">Collect feedback before broader rollout</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 5: Deployment & Enablement",
-    sectionNum: "5",
-    title: "5.2 Internal Communications",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Change management trail
-    subtitle: "Let users know the agent exists and how to use it.",
-    body: `
-      <p class="section-intro">Users need to know the agent exists, what it does, and how to use it.</p>
-      <ul class="bullets">
-        <li>Slack or Teams announcement with a short description and the inbound email address</li>
-        <li>A one-page quick start guide shared by the admin or manager</li>
-        <li>A short Loom or recorded demo walkthrough</li>
-        <li>An internal Knowledge Article describing the agent's capabilities and limitations</li>
-      </ul>
-    `
-  },
-  {
-    sectionLabel: "Section 5: Deployment & Enablement",
-    sectionNum: "5",
-    title: "5.3 Training & Adoption",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: User adoption / enablement trail
-    subtitle: "Drive early adoption with demos, office hours, and manager reinforcement.",
-    body: `
-      <ul class="bullets">
-        <li>A live demo during a team meeting or sales standup</li>
-        <li>Office hours in the first two weeks post-launch for questions</li>
-        <li>A sample prompt library — a short list of example emails reps or employees can send to get started quickly</li>
-        <li>Manager reinforcement — asking reps to use the agent for a specific workflow for the first 30 days</li>
-      </ul>
-    `
-  },
-  {
-    sectionLabel: "Section 5: Deployment & Enablement",
-    sectionNum: "5",
-    title: "5.4 Monitoring & Iteration",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Interaction Logs / monitoring
-    subtitle: "Review usage and refine the agents after launch.",
-    body: `
-      <ul class="bullets">
-        <li>Review Einstein Interaction Logs in Setup to see how the agent is being used and where it falls short</li>
-        <li>Set up a feedback channel (Slack, email alias, or form) for users to flag issues</li>
-        <li>Schedule a 30-day review to assess action completion rates and response quality</li>
-        <li>Prioritize the Data Cloud grounding setup (Appendix A) as a near-term follow-up to improve Sales Agent response quality</li>
-      </ul>
     `
   },
 
@@ -2355,7 +1773,10 @@ function updateUI() {
   const btnNext = document.getElementById('btnNext');
   const nextIdx = seq[pos + 1];
   const nextIsCompletion = nextIdx !== undefined && cards[nextIdx] && cards[nextIdx].isCompletion;
-  if (pos === total - 1) {
+  const onCompletion = cards[state.current] && cards[state.current].isCompletion;
+  if (onCompletion) {
+    btnNext.textContent = 'Choose Another Agent →';
+  } else if (pos === total - 1) {
     btnNext.textContent = '✓ Done';
   } else if (nextIsCompletion) {
     btnNext.textContent = '🎉 Finish';
@@ -2371,6 +1792,14 @@ function updateUI() {
 }
 
 function navigate(dir) {
+  if (dir === 1 && cards[state.current] && cards[state.current].isCompletion) {
+    const chooserIdx = cards.findIndex(c => c.sectionLabel === 'Choose Your Agent');
+    if (chooserIdx !== -1) {
+      state.current = chooserIdx;
+      updateUI();
+      return;
+    }
+  }
   const seq = getSequence();
   const pos = seq.indexOf(state.current);
   const next = pos + dir;
@@ -2386,6 +1815,11 @@ function goTo(i) {
   if (['sales','employee','service'].includes(t)) state.activeTrack = t;
   state.current = i;
   updateUI();
+}
+
+function goToAppendixA() {
+  const idx = cards.findIndex(c => c.sectionLabel === 'Appendix A: Data Cloud Advanced Setup');
+  if (idx !== -1) goTo(idx);
 }
 
 function switchTrack(track) {
