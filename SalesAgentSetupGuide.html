@@ -748,6 +748,103 @@
     }
     .placeholder { color: #5DB8F7; font-weight: 700; }
 
+    /* ── Agent overview (two-column intro per track) ── */
+    .agent-overview {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 800px) {
+      .agent-overview { grid-template-columns: 1fr; }
+    }
+    .ao-left h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      margin: 22px 0 8px;
+    }
+    .ao-left h3:first-child { margin-top: 0; }
+
+    .ao-template {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--sf-note-bg);
+      border: 1px solid var(--sf-border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      margin: 0 0 10px;
+    }
+    .ao-template::before {
+      content: "📦";
+      font-size: 18px;
+    }
+    .ao-template-stack {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+    .ao-template-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sf-blue);
+    }
+    .ao-left p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--sf-text);
+      margin-bottom: 8px;
+    }
+    .ao-right {
+      background: #E8F1FB;
+      border-radius: 14px;
+      padding: 24px 22px;
+    }
+    .ao-right h3 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      margin: 0 0 14px;
+    }
+    .ao-right h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--sf-dark);
+      margin: 14px 0 8px;
+    }
+    .ao-right ul {
+      margin: 0 0 4px 18px;
+      padding: 0;
+    }
+    .ao-right ul li {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--sf-text);
+      margin-bottom: 6px;
+    }
+    .ao-right a { color: var(--sf-green); text-decoration: underline; }
+    .ao-right a:hover { color: #1B5C32; }
+
+    .ao-start-btn {
+      margin-top: 22px;
+      padding: 12px 26px;
+      border-radius: 8px;
+      border: 2px solid var(--sf-blue);
+      background: var(--sf-blue);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ao-start-btn:hover { background: var(--sf-dark); border-color: var(--sf-dark); }
+
     /* ── Confetti ── */
     .confetti-layer {
       position: fixed;
@@ -1191,6 +1288,46 @@ const cards = [
   {
     sectionLabel: "Section 2: Internal Employee-Facing Agent",
     sectionNum: "2",
+    title: "Build an Employee Agent",
+    subtitle: "Overview of the template, key inputs, and best practices before you start building.",
+    track: "employee",
+    isOverview: true,
+    body: `
+      <div class="agent-overview">
+        <div class="ao-left">
+          <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Employee Agent</span></div></div>
+          <p>The Agentforce Employee Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
+          <h3>Define the Description, Role, and Company</h3>
+          <p>These inputs serve as the primary system prompt that <strong>grounds the Atlas Reasoning Engine in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
+          <h3>Create the Agent User</h3>
+          <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
+          <button class="ao-start-btn" onclick="goToFirstStep('employee')">Start Building →</button>
+        </div>
+        <div class="ao-right">
+          <h3>Lessons Learned</h3>
+          <h4>Best Practices</h4>
+          <ul>
+            <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
+            <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
+            <li>Ensure that you have granted the Agent access to the default data space.</li>
+            <li>Enable enhanced event logs for visibility.</li>
+            <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
+          </ul>
+          <h4>Important Resources &amp; Documentation</h4>
+          <ul>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionNum: "2",
     title: "2.1 Create the Agent in Agentforce Studio",
     subtitle: "Launch Agentforce Studio and create a new Employee Agent from the template.",
     track: "employee",
@@ -1280,6 +1417,46 @@ const cards = [
   {
     sectionLabel: "Section 3: Sales Agent — Account Management",
     sectionNum: "3",
+    title: "Build a Sales Agent",
+    subtitle: "Overview of the template, key inputs, and best practices before you start building.",
+    track: "sales",
+    isOverview: true,
+    body: `
+      <div class="agent-overview">
+        <div class="ao-left">
+          <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Sales Agent</span></div></div>
+          <p>The Agentforce Sales Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
+          <h3>Define the Description, Role, and Company</h3>
+          <p>These inputs serve as the primary system prompt that <strong>grounds the Atlas Reasoning Engine in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
+          <h3>Create the Agent User</h3>
+          <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
+          <button class="ao-start-btn" onclick="goToFirstStep('sales')">Start Building →</button>
+        </div>
+        <div class="ao-right">
+          <h3>Lessons Learned</h3>
+          <h4>Best Practices</h4>
+          <ul>
+            <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
+            <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
+            <li>Ensure that you have granted the Agent access to the default data space.</li>
+            <li>Enable enhanced event logs for visibility.</li>
+            <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
+          </ul>
+          <h4>Important Resources &amp; Documentation</h4>
+          <ul>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionNum: "3",
     title: "3.1 Enable Agentforce for Sales",
     subtitle: "Turn on Account Management and the supporting Sales features in Setup.",
     track: "sales",
@@ -1292,7 +1469,6 @@ const cards = [
         <li><div class="step-content">Click <strong>Finish Configuring Account Plans</strong>.</div></li>
         <li><div class="step-content">Click <strong>Turn on Account Research</strong>.</div></li>
         <li><div class="step-content">Click <strong>Set Up Einstein Conversation Insights</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Set Up Einstein Activity Capture</strong>.</div></li>
       </ol>
     `
   },
@@ -1376,6 +1552,46 @@ const cards = [
   },
 
   // ── SECTION 4 (SERVICE) ──
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "Build a Service Agent",
+    subtitle: "Overview of the template, key inputs, and best practices before you start building.",
+    track: "service",
+    isOverview: true,
+    body: `
+      <div class="agent-overview">
+        <div class="ao-left">
+          <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Service Agent</span></div></div>
+          <p>The Agentforce Service Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
+          <h3>Define the Description, Role, and Company</h3>
+          <p>These inputs serve as the primary system prompt that <strong>grounds the Atlas Reasoning Engine in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
+          <h3>Create the Service Agent User</h3>
+          <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
+          <button class="ao-start-btn" onclick="goToFirstStep('service')">Start Building →</button>
+        </div>
+        <div class="ao-right">
+          <h3>Lessons Learned</h3>
+          <h4>Best Practices</h4>
+          <ul>
+            <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
+            <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
+            <li>Ensure that you have granted the Agent access to the default data space.</li>
+            <li>Enable enhanced event logs for visibility.</li>
+            <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
+          </ul>
+          <h4>Important Resources &amp; Documentation</h4>
+          <ul>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
   {
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
@@ -1819,6 +2035,11 @@ function goTo(i) {
 
 function goToAppendixA() {
   const idx = cards.findIndex(c => c.sectionLabel === 'Appendix A: Data Cloud Advanced Setup');
+  if (idx !== -1) goTo(idx);
+}
+
+function goToFirstStep(track) {
+  const idx = cards.findIndex(c => c.track === track && !c.isOverview && !c.isCompletion);
   if (idx !== -1) goTo(idx);
 }
 
