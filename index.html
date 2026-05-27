@@ -1404,7 +1404,7 @@ const cards = [
         <li>Customize the agent prompt with your company's specific use case</li>
         <li>Share with your team and gather feedback</li>
         <li>Explore additional actions and subagents to expand capability</li>
-        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+        <li><span>Visit <a href="https://trailhead.salesforce.com" target="_blank" rel="noopener">Trailhead</a> and <a href="https://help.salesforce.com" target="_blank" rel="noopener">Salesforce Help</a> for advanced configuration</span></li>
       </ul>
       <div class="completion-cta">
         <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
@@ -1541,7 +1541,7 @@ const cards = [
         <li>Customize the agent prompt with your company's specific use case</li>
         <li>Share with your team and gather feedback</li>
         <li>Explore additional actions and subagents to expand capability</li>
-        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+        <li><span>Visit <a href="https://trailhead.salesforce.com" target="_blank" rel="noopener">Trailhead</a> and <a href="https://help.salesforce.com" target="_blank" rel="noopener">Salesforce Help</a> for advanced configuration</span></li>
       </ul>
       <div class="completion-cta">
         <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
@@ -1666,7 +1666,7 @@ const cards = [
         <li>Customize the agent prompt with your company's specific use case</li>
         <li>Share with your team and gather feedback</li>
         <li>Explore additional actions and subagents to expand capability</li>
-        <li>Visit Salesforce Help &amp; Trailhead for advanced configuration</li>
+        <li><span>Visit <a href="https://trailhead.salesforce.com" target="_blank" rel="noopener">Trailhead</a> and <a href="https://help.salesforce.com" target="_blank" rel="noopener">Salesforce Help</a> for advanced configuration</span></li>
       </ul>
       <div class="completion-cta">
         <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
@@ -1868,13 +1868,6 @@ function render() {
     const tagHTML = c.tag ? `<span class="tag ${c.tag}">${c.tagLabel}</span>` : '';
     const trackClass = c.track ? 'track-' + c.track : '';
 
-    const th = c.trailhead;
-    const thHref = th ? (typeof th === 'string' ? th : th.url) : '';
-    const thLabel = (th && typeof th === 'object' && th.label) ? th.label : 'Trailhead';
-    const trailheadHTML = th
-      ? `<a class="th-link" href="${thHref}" target="_blank" rel="noopener">📖 ${thLabel} ↗</a>`
-      : '';
-
     const headerHTML = c.isCompletion ? '' : `
         <div class="card-header">
           <div class="card-num">${numLabel || '★'}</div>
@@ -1882,7 +1875,6 @@ function render() {
             <h2>${c.title}${tagHTML}</h2>
             <div class="sub">${c.subtitle || ''}</div>
           </div>
-          ${trailheadHTML}
         </div>
     `;
 
