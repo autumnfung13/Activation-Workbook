@@ -506,6 +506,26 @@
       font-family: 'SF Mono', 'Fira Code', monospace;
     }
 
+    .copy-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+      background: #EAF4FF;
+      border: 1px solid #C9DEF7;
+      color: var(--sf-blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      vertical-align: baseline;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .copy-inline:hover { background: #DCEBFC; border-color: var(--sf-blue); }
+    .copy-inline.copied { background: #E5F5EA; border-color: #2E844A; color: #2E844A; }
+
     .sub-label {
       font-weight: 700;
       font-size: 14px;
@@ -1338,8 +1358,8 @@ const cards = [
         <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
         <li><div class="step-content">Find <strong>Agentforce Employee Agent</strong>.</div></li>
         <li><div class="step-content">Click <strong>Select Template</strong>.</div></li>
-        <li><div class="step-content">For the <strong>Agent Name</strong>, input "<strong>Employee Agent</strong>".</div></li>
-        <li><div class="step-content">For <strong>Developer Name</strong>, "<strong>Employee_Agent</strong>" autopopulates.</div></li>
+        <li><div class="step-content">For the <strong>Agent Name</strong>, input <code>Employee Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Employee Agent')">Copy</button>.</div></li>
+        <li><div class="step-content">For <strong>Developer Name</strong>, <code>Employee_Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Employee_Agent')">Copy</button> autopopulates.</div></li>
         <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
       </ol>
     `
@@ -1356,9 +1376,9 @@ const cards = [
         <li><div class="step-content">Hover over the side of <strong>Subagents</strong> — a <strong>+</strong> icon will appear.</div></li>
         <li><div class="step-content">Click on the <strong>+</strong> icon.</div></li>
         <li><div class="step-content">Click <strong>Add from Asset Library</strong>.</div></li>
-        <li><div class="step-content">Search <strong>Single Record Summary</strong> Subagent.</div></li>
+        <li><div class="step-content">Search <code>Single Record Summary</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Single Record Summary')">Copy</button> Subagent.</div></li>
         <li><div class="step-content">Click <strong>Select</strong>.</div></li>
-        <li><div class="step-content">Search <strong>General CRM</strong> Subagent.</div></li>
+        <li><div class="step-content">Search <code>General CRM</code><button type="button" class="copy-inline" onclick="copyInline(this, 'General CRM')">Copy</button> Subagent.</div></li>
         <li><div class="step-content">Click <strong>Select</strong>.</div></li>
         <li><div class="step-content">Click <strong>Add to Agent</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
@@ -1377,11 +1397,12 @@ const cards = [
     track: "employee",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
     body: `
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span>These test prompts assume Prerequisites and Section 1 setup are fully complete. If your agent is not responding as expected, verify your Einstein, Data Cloud, and permissions configuration first.</span></div>
       <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test the agent before sharing more broadly.</span></div>
       <ol class="steps">
         <li><div class="step-content">Click <strong>Preview</strong>.</div></li>
-        <li><div class="step-content">Ask a question to test the agent (e.g. <em>"Find me 'x' record"</em>).</div></li>
-        <li><div class="step-content">Ask the agent to summarize your record.</div></li>
+        <li><div class="step-content">Ask a question to test the agent: <code>Find me my most recent support case</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Find me my most recent support case')">Copy</button>.</div></li>
+        <li><div class="step-content">Ask the agent to summarize your record: <code>Summarize this record</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Summarize this record')">Copy</button>.</div></li>
       </ol>
     `
   },
@@ -1406,9 +1427,6 @@ const cards = [
         <li>Explore additional actions and subagents to expand capability</li>
         <li><span>Visit <a href="https://trailhead.salesforce.com" target="_blank" rel="noopener">Trailhead</a> and <a href="https://help.salesforce.com" target="_blank" rel="noopener">Salesforce Help</a> for advanced configuration</span></li>
       </ul>
-      <div class="completion-cta">
-        <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
-      </div>
       <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
     `
   },
@@ -1668,9 +1686,6 @@ const cards = [
         <li>Explore additional actions and subagents to expand capability</li>
         <li><span>Visit <a href="https://trailhead.salesforce.com" target="_blank" rel="noopener">Trailhead</a> and <a href="https://help.salesforce.com" target="_blank" rel="noopener">Salesforce Help</a> for advanced configuration</span></li>
       </ul>
-      <div class="completion-cta">
-        <strong>Ready to go further?</strong> Replace the <span class="placeholder">[placeholder]</span> fields in your agent prompt with your real company details and activate your agent for your team.
-      </div>
       <button class="completion-back" onclick="goTo(0)">← Back to Overview</button>
     `
   },
@@ -2061,6 +2076,17 @@ function startAgentTrack(track) {
 }
 
 function copyCard(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function copyInline(btn, text) {
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = 'Copied ✓';
     btn.classList.add('copied');
