@@ -39,6 +39,9 @@
       align-items: center;
       gap: 14px;
       flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
     header .logo {
@@ -84,8 +87,8 @@
       border-right: 1px solid var(--sf-border);
       padding: 16px 0 120px;
       position: sticky;
-      top: 0;
-      max-height: calc(100vh - 80px);
+      top: 56px;
+      max-height: calc(100vh - 56px);
       overflow-y: auto;
       align-self: flex-start;
     }
@@ -175,6 +178,9 @@
       align-items: center;
       gap: 14px;
       flex-shrink: 0;
+      position: sticky;
+      top: 56px;
+      z-index: 40;
     }
 
     .progress-track {
@@ -241,10 +247,15 @@
       border: 1px solid var(--sf-border);
       box-shadow: 0 2px 16px rgba(0,0,0,0.07);
       overflow: hidden;
-      display: none;
+      display: block;
+      scroll-margin-top: 120px;
+      margin-bottom: 28px;
+      transition: opacity 0.3s ease;
     }
 
-    .card.visible { display: block; }
+    .card-area:has(.card.card-active) .card:not(.card-active) {
+      opacity: 0.45;
+    }
 
     .card-body {
       padding: 32px 36px;
@@ -301,9 +312,50 @@
     .th-link:hover { background: rgba(255,255,255,0.28); }
 
     /* Intro card special style */
+    .card.intro-card {
+      min-height: calc(100vh - 56px - 47px - 28px);
+      display: flex;
+      flex-direction: column;
+    }
     .intro-card .card-header {
       background: linear-gradient(135deg, var(--sf-dark) 0%, var(--sf-blue) 100%);
       padding: 32px 36px;
+    }
+    .intro-card .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 36px;
+    }
+
+    .intro-cta-wrap {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .intro-cta {
+      background: var(--sf-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px rgba(0,112,210,0.25);
+    }
+    .intro-cta:hover {
+      background: #005FB2;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,112,210,0.35);
+    }
+    .intro-cta-hint {
+      font-size: 13px;
+      color: var(--sf-muted);
     }
 
     .agent-chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
@@ -336,6 +388,20 @@
     .callout.warning { background: var(--sf-yellow-bg); border-left: 4px solid var(--sf-yellow-border); color: #6B4F00; }
     .callout.success { background: var(--sf-green-bg); border-left: 4px solid var(--sf-green); color: #1B4D2E; }
     .callout.prework { background: #F3F0FF; border-left: 4px solid #7B5EA7; color: #3E2166; }
+
+    .step-note {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .step-note .step-note-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+    .step-note.warning { background: var(--sf-yellow-bg); border-left: 3px solid var(--sf-yellow-border); color: #6B4F00; }
+    .step-note.note    { background: var(--sf-note-bg); border-left: 3px solid var(--sf-blue); color: var(--sf-dark); }
 
     /* ── Steps ── */
     .section-intro {
@@ -551,23 +617,21 @@
     .tag.optional { background: #E8F8EC; color: #2E844A; }
     .tag.dayof    { background: #EAF4FF; color: var(--sf-blue); }
 
-    /* ── Navigation footer ── */
-    .nav-footer {
-      background: white;
-      border-top: 1px solid var(--sf-border);
-      padding: 14px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      gap: 16px;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
+    .badge-type {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
     }
+    .badge-type.agentforce    { background: #d8edff; color: #032d60; }
+    .badge-type.sales-agent   { background: #cdefc4; color: #0a5c28; }
+    .badge-type.service-agent { background: #fde8b3; color: #7a4500; }
+
+    /* ── Navigation footer (hidden in scroll mode) ── */
+    .nav-footer { display: none; }
 
     .nav-btn {
       display: flex;
@@ -972,9 +1036,11 @@
     }
     .completion-back:hover { background: var(--sf-blue); color: white; }
 
-    /* Hide completion nav-items until gate satisfied */
+    /* Completion cards & nav-items are hidden until their track is fully checked */
     .nav-item.completion-nav-item { display: none; }
     .nav-item.completion-nav-item.completion-unlocked { display: flex; }
+    .card[data-completion="true"] { display: none; }
+    .card[data-completion="true"].completion-unlocked { display: block; }
 
     /* ── Sidebar section completion indicator ── */
     .nav-check {
@@ -1013,13 +1079,6 @@
 
 <div class="shell">
 
-  <!-- Nav bar — always visible at top -->
-  <div class="nav-footer">
-    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled>← Previous</button>
-    <span class="card-counter" id="cardCounter"></span>
-    <button class="nav-btn primary" id="btnNext" onclick="navigate(1)">Next →</button>
-  </div>
-
   <div class="shell-body">
 
     <!-- Sidebar -->
@@ -1033,14 +1092,7 @@
         <div class="progress-track">
           <div class="progress-fill" id="progressFill" style="width:0%"></div>
         </div>
-        <span class="progress-label" id="progressLabel">Step 1 of 1</span>
-      </div>
-
-      <!-- Agent tabs -->
-      <div class="tab-bar" id="tabBar">
-        <button class="tab-btn tab-sales"    id="tab-sales"    onclick="switchTrack('sales')">💼 Sales</button>
-        <button class="tab-btn tab-employee" id="tab-employee" onclick="switchTrack('employee')">🤖 Employee</button>
-        <button class="tab-btn tab-service"  id="tab-service"  onclick="switchTrack('service')">🎧 Service</button>
+        <span class="progress-label" id="progressLabel">0%</span>
       </div>
 
       <!-- Cards -->
@@ -1088,6 +1140,10 @@ const cards = [
           <p>This agent supports service workflows, grounded in your data library.</p>
         </div>
       </div>
+      <div class="intro-cta-wrap">
+        <button class="intro-cta" onclick="goToFirstStep('shared')">Get Started →</button>
+        <div class="intro-cta-hint">Or use the sidebar to jump to any section</div>
+      </div>
     `
   },
 
@@ -1102,13 +1158,14 @@ const cards = [
     body: `
       <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Confirm licenses are provisioned in <strong>Setup → Company Information → Licenses</strong>.</span></div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Requirement</th><th>Details</th><th>✓</th></tr></thead>
+        <thead><tr><th>Type</th><th>Requirement</th><th>Details</th><th>✓</th></tr></thead>
         <tbody>
-          <tr><td>Salesforce Edition</td><td>Enterprise or Unlimited Edition required</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Agentforce License</td><td>Agentforce for Sales or Agentforce Platform license provisioned</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Einstein Platform License</td><td>Required for Einstein Generative AI features</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Data Cloud License</td><td>Data Cloud for Salesforce required for agent grounding</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Sales Cloud License</td><td>Required for Account Management agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Salesforce Edition</td><td>Enterprise or Unlimited Edition required</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Agentforce License</td><td>Agentforce for Sales or Agentforce Platform license provisioned</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Einstein Platform License</td><td>Required for Einstein Generative AI features</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Data Cloud License</td><td>Data Cloud for Salesforce required for agent grounding</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type sales-agent">Sales Agent</span></td><td>Sales Cloud License</td><td>Required for Account Management agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td><span class="badge-type service-agent">Service Agent</span></td><td>Service Cloud License</td><td>Required for customer-facing service agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
         </tbody>
       </table></div>
     `
@@ -1145,13 +1202,13 @@ const cards = [
       <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Create a Permission Set combining these permissions and assign it to all workshop participants before the session.</span></div>
       <p class="section-intro">The users who will build and test the agents need the following permissions assigned.</p>
       <div class="table-wrap"><table>
-        <thead><tr><th>Permission</th><th>Where to Assign</th></tr></thead>
+        <thead><tr><th>Permission</th><th>Where to Assign</th><th>✓</th></tr></thead>
         <tbody>
-          <tr><td>Customize Application</td><td>System Permissions on Profile or Permission Set</td></tr>
-          <tr><td>Manage Einstein Features</td><td>Permission Set: Einstein AI Permissions</td></tr>
-          <tr><td>Agentforce Admin</td><td>Permission Set: Agentforce Admin</td></tr>
-          <tr><td>Data Cloud Admin</td><td>Permission Set: Data Cloud Admin</td></tr>
-          <tr><td>View Setup and Configuration</td><td>System Permissions</td></tr>
+          <tr><td>Customize Application</td><td>System Permissions on Profile or Permission Set</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Manage Einstein Features</td><td>Permission Set: Einstein AI Permissions</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Agentforce Admin</td><td>Permission Set: Agentforce Admin</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>Data Cloud Admin</td><td>Permission Set: Data Cloud Admin</td><td><input type="checkbox" class="row-check"></td></tr>
+          <tr><td>View Setup and Configuration</td><td>System Permissions</td><td><input type="checkbox" class="row-check"></td></tr>
         </tbody>
       </table></div>
     `
@@ -1166,7 +1223,7 @@ const cards = [
     body: `
       <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Run a SOQL report or list view to confirm data quality before the workshop.</span></div>
       <p class="section-intro">Agent output quality depends on the completeness of the underlying data.</p>
-      <div class="sub-label">Account Data — Required for Sales Agent</div>
+      <div class="sub-label">Account Data — Required for <span class="badge-type sales-agent">Sales Agent</span></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Data Check</th><th>Recommended Threshold</th><th>✓</th></tr></thead>
         <tbody>
@@ -1177,7 +1234,7 @@ const cards = [
           <tr><td>Contacts linked to Accounts</td><td>≥ 1 contact per active Account</td><td><input type="checkbox" class="row-check"></td></tr>
         </tbody>
       </table></div>
-      <div class="sub-label">Internal Knowledge — Required for Employee-Facing Agent</div>
+      <div class="sub-label">Knowledge Articles — Important for <span class="badge-type service-agent">Service Agent</span></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Data Check</th><th>Notes</th><th>✓</th></tr></thead>
         <tbody>
@@ -1188,28 +1245,6 @@ const cards = [
       </table></div>
     `
   },
-  {
-    sectionLabel: "Section 0: Prerequisites & Org Checklist",
-    sectionNum: "0",
-    title: "0.5 Pre-Workshop Environment Check",
-    subtitle: "Run through this checklist together at the start of the session.",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Sandbox vs production trail
-    tag: "dayof",
-    tagLabel: "Day-Of",
-    body: `
-      <ul class="checklist" id="envChecklist">
-        <li><input type="checkbox" id="c1"><label for="c1">All participants can log into the Salesforce org</label></li>
-        <li><input type="checkbox" id="c2"><label for="c2">All participants have the workshop Permission Set assigned</label></li>
-        <li><input type="checkbox" id="c3"><label for="c3">Setup → Agents page loads without error</label></li>
-        <li><input type="checkbox" id="c4"><label for="c4">Data Cloud is showing as Active in Setup</label></li>
-        <li><input type="checkbox" id="c5"><label for="c5">At least one Einstein Generative AI model is connected (Setup → Einstein Generative AI → AI Models)</label></li>
-        <li><input type="checkbox" id="c6"><label for="c6">Build environment confirmed — sandbox, sandbox-adjacent, or production</label></li>
-      </ul>
-      <div class="callout warning"><span class="callout-icon">⚠️</span><span>Building in production is not recommended. Changes made during the workshop will be live immediately. If proceeding in production, ensure all participants understand this risk before continuing.</span></div>
-    `
-  },
-
   // ── SECTION 2 ──
   {
     sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
@@ -1269,38 +1304,6 @@ const cards = [
         <li><div class="step-content">Click <strong>Go To Einstein Trust Layer</strong>.</div></li>
         <li><div class="step-content">Confirm <strong>Large Language Model Data Masking</strong> is set to on.</div></li>
       </ol>
-    `
-  },
-
-  // ── CHOOSE YOUR AGENT ──
-  {
-    sectionLabel: "Choose Your Agent",
-    sectionNum: "→",
-    title: "Choose Your Agent Track",
-    subtitle: "Shared setup is complete. Pick the agent track you'll build today.",
-    track: "shared",
-    body: `
-      <p class="section-intro">You've finished the shared prerequisites and platform configuration. From here, the workshop branches by agent type. Pick the track that matches what you're building — you can switch tabs at any time using the agent tabs at the top of the page.</p>
-      <div class="agent-chooser">
-        <div class="chooser-card cs-employee" onclick="startAgentTrack('employee')">
-          <div class="chooser-icon">🤖</div>
-          <h3>Employee Agent</h3>
-          <p>This agent helps employees look up internal processes and take follow-up actions.</p>
-          <div class="chooser-cta">Start Employee Setup →</div>
-        </div>
-        <div class="chooser-card cs-sales" onclick="startAgentTrack('sales')">
-          <div class="chooser-icon">💼</div>
-          <h3>Sales Agent</h3>
-          <p>This agent helps sales reps manage their accounts.</p>
-          <div class="chooser-cta">Start Sales Setup →</div>
-        </div>
-        <div class="chooser-card cs-service" onclick="startAgentTrack('service')">
-          <div class="chooser-icon">🎧</div>
-          <h3>Service Agent</h3>
-          <p>This agent supports service workflows, grounded in your data library.</p>
-          <div class="chooser-cta">Start Service Setup →</div>
-        </div>
-      </div>
     `
   },
 
@@ -1487,6 +1490,7 @@ const cards = [
         <li><div class="step-content">Click <strong>Finish Configuring Account Plans</strong>.</div></li>
         <li><div class="step-content">Click <strong>Turn on Account Research</strong>.</div></li>
         <li><div class="step-content">Click <strong>Set Up Einstein Conversation Insights</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Set Up Einstein Activity Capture</strong>.</div></li>
       </ol>
     `
   },
@@ -1623,8 +1627,8 @@ const cards = [
         <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
         <li><div class="step-content">Find <strong>Agentforce Service Agent</strong>.</div></li>
         <li><div class="step-content">Click <strong>Select Template</strong>.</div></li>
-        <li><div class="step-content">For the <strong>Agent Name</strong>, add <strong>Service Agent</strong>.</div></li>
-        <li><div class="step-content">For <strong>Developer Name</strong>, <strong>Service_Agent</strong> autopopulates.</div></li>
+        <li><div class="step-content">For the <strong>Agent Name</strong>, input <code>Service Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service Agent')">Copy</button>.</div></li>
+        <li><div class="step-content">For <strong>Developer Name</strong>, <code>Service_Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service_Agent')">Copy</button> autopopulates.</div></li>
         <li><div class="step-content">Confirm the user record assigned is <strong>New User</strong>.</div></li>
         <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
       </ol>
@@ -1633,7 +1637,29 @@ const cards = [
   {
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
-    title: "4.2 Connect Your Data Library",
+    title: "4.2 Create Your Data Library",
+    subtitle: "Set up an Agentforce Data Library to ground the agent in Knowledge.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup</strong> → search and select <strong>Agentforce Data Library</strong>.</div></li>
+        <li><div class="step-content">Click <strong>New Library +</strong>.</div></li>
+        <li><div class="step-content">Enter a unique name (e.g. <code>Service Agent Library</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service Agent Library')">Copy</button>).</div></li>
+        <li><div class="step-content">Enter a description (e.g. <code>The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.</code><button type="button" class="copy-inline" onclick="copyInline(this, 'The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.')">Copy</button>).</div></li>
+        <li><div class="step-content">Add a data source by clicking on <strong>Select a data type…</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge</strong>.<div class="step-note warning"><span class="step-note-icon">⚠️</span><span>Once set, you cannot change the data source type for this specific library.</span></div></div></li>
+        <li><div class="step-content">Select the first identifying field as <strong>Title</strong>.</div></li>
+        <li><div class="step-content">Select the second identifying field as <strong>Summary</strong>.</div></li>
+        <li><div class="step-content">Scroll down and check off <strong>Chat Answer</strong>, <strong>Details</strong>, <strong>Resolution</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong> at the bottom.<div class="step-note note"><span class="step-note-icon">⏱️</span><span>This can take some time — wait until the status reflects <strong>Ready</strong> in green. You may need to refresh to confirm.</span></div></div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionNum: "4",
+    title: "4.3 Connect Your Data Library",
     subtitle: "Ground the agent's responses by connecting a data library.",
     track: "service",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
@@ -1653,7 +1679,7 @@ const cards = [
   {
     sectionLabel: "Section 4: Service Agent — Customer Support",
     sectionNum: "4",
-    title: "4.3 Test Service Agent",
+    title: "4.4 Test Service Agent",
     subtitle: "Use the built-in Preview to verify the agent's behavior.",
     track: "service",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
@@ -1661,7 +1687,7 @@ const cards = [
       <div class="callout success"><span class="callout-icon">✅</span><span>Use the built-in <strong>Preview</strong> tool in Agent Builder to test the agent before going live.</span></div>
       <ol class="steps">
         <li><div class="step-content">Click <strong>Preview</strong>.</div></li>
-        <li><div class="step-content">Ask a question to test the agent.</div></li>
+        <li><div class="step-content">Ask a question to test the agent: <code>What is the return policy?</code><button type="button" class="copy-inline" onclick="copyInline(this, 'What is the return policy?')">Copy</button>.</div></li>
       </ol>
     `
   },
@@ -1708,7 +1734,7 @@ const cards = [
         <li><div class="step-content">Click <strong>New</strong>.</div></li>
         <li><div class="step-content">Select the data source type — for CRM data, choose <strong>Salesforce CRM</strong>.</div></li>
         <li><div class="step-content">Select the objects to ingest: <strong>Account, Contact, Opportunity, Task</strong>.</div></li>
-        <li><div class="step-content">Choose the fields to include for each object (align with the fields configured in Section 3.2).</div></li>
+        <li><div class="step-content">Choose the fields to include for each object.</div></li>
         <li><div class="step-content">Set the refresh schedule — <strong>Hourly</strong> is recommended for sales data.</div></li>
         <li><div class="step-content">Click <strong>Deploy</strong>. Data Cloud will begin ingesting records on the next scheduled run.</div></li>
       </ol>
@@ -1846,30 +1872,6 @@ const cards = [
 ];
 
 // ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-const state = {
-  current: 0,
-  activeTrack: 'sales',
-  unlockedCompletion: { sales: false, employee: false, service: false }
-};
-
-const TRACK_COLORS = {
-  sales:    '#0070D2',
-  employee: '#7B5EA7',
-  service:  '#2E844A',
-  shared:   '#54698D'
-};
-
-function getSequence() {
-  return cards.reduce((acc, c, i) => {
-    if (c.isCompletion && !state.unlockedCompletion[c.track]) return acc;
-    if (c.track === 'shared' || c.track === state.activeTrack) acc.push(i);
-    return acc;
-  }, []);
-}
-
-// ─────────────────────────────────────────────
 // RENDER
 // ─────────────────────────────────────────────
 function render() {
@@ -1894,10 +1896,7 @@ function render() {
     `;
 
     return `
-      <div class="breadcrumb" id="breadcrumb-${i}" style="display:none;">
-        <span class="section-pill">${c.sectionLabel}</span>
-      </div>
-      <div class="card ${i === 0 ? 'visible' : ''} ${isIntro ? 'intro-card' : ''} ${trackClass}" id="card-${i}">
+      <div class="card ${isIntro ? 'intro-card' : ''} ${trackClass}" id="card-${i}" data-track="${c.track || 'shared'}"${c.isCompletion ? ' data-completion="true"' : ''}>
         ${headerHTML}
         <div class="card-body">${c.body}</div>
       </div>
@@ -1932,112 +1931,14 @@ function render() {
   });
   sidebarHTML += '</div>';
   sidebar.innerHTML = sidebarHTML;
-
-  updateUI();
 }
 
-function updateUI() {
-  const seq = getSequence();
-  const pos = seq.indexOf(state.current);
-  const total = seq.length;
-  const curTrack = cards[state.current].track;
-
-  // Show only current card + breadcrumb
-  cards.forEach((_, i) => {
-    const card = document.getElementById(`card-${i}`);
-    const bc   = document.getElementById(`breadcrumb-${i}`);
-    const nav  = document.getElementById(`nav-${i}`);
-    if (card) card.classList.toggle('visible', i === state.current);
-    if (bc)   bc.style.display = i === state.current ? 'flex' : 'none';
-    if (nav) {
-      const inSeq = seq.includes(i);
-      const seqPos = seq.indexOf(i);
-      nav.classList.toggle('active', i === state.current);
-      nav.classList.toggle('completed', inSeq && seqPos < pos);
-    }
-  });
-
-  // Sidebar group dimming
-  document.querySelectorAll('.nav-section-group[data-track]').forEach(grp => {
-    const t = grp.dataset.track;
-    const isAgentTrack = ['sales','employee','service'].includes(t);
-    grp.classList.toggle('track-inactive', isAgentTrack && t !== state.activeTrack);
-  });
-
-  // Tab bar visibility + active tab
-  const tabBar = document.getElementById('tabBar');
-  const showTabs = curTrack !== 'shared';
-  tabBar.classList.toggle('visible', showTabs);
-  ['sales','employee','service'].forEach(t => {
-    const btn = document.getElementById('tab-' + t);
-    if (btn) btn.classList.toggle('active', t === state.activeTrack);
-  });
-
-  // Nav footer track color
-  const navFooter = document.querySelector('.nav-footer');
-  navFooter.className = 'nav-footer';
-  if (curTrack !== 'shared') navFooter.classList.add('track-' + state.activeTrack);
-
-  // Scroll the page back to the top so the new card starts at the top of the viewport
-  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-
-  // Scroll sidebar item into view
-  const activeNav = document.getElementById(`nav-${state.current}`);
-  if (activeNav) activeNav.scrollIntoView({ block: 'nearest' });
-
-  // Progress
-  const pct = total > 1 ? Math.round((pos / (total - 1)) * 100) : 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = `Step ${pos + 1} of ${total}`;
-  document.getElementById('cardCounter').textContent = `${pos + 1} / ${total}`;
-
-  // Buttons
-  document.getElementById('btnPrev').disabled = pos === 0;
-  const btnNext = document.getElementById('btnNext');
-  const nextIdx = seq[pos + 1];
-  const nextIsCompletion = nextIdx !== undefined && cards[nextIdx] && cards[nextIdx].isCompletion;
-  const onCompletion = cards[state.current] && cards[state.current].isCompletion;
-  if (onCompletion) {
-    btnNext.textContent = 'Choose Another Agent →';
-  } else if (pos === total - 1) {
-    btnNext.textContent = '✓ Done';
-  } else if (nextIsCompletion) {
-    btnNext.textContent = '🎉 Finish';
-  } else {
-    btnNext.textContent = 'Next →';
-  }
-  btnNext.disabled = false;
-
-  // Fire confetti when arriving on a completion card
-  if (cards[state.current] && cards[state.current].isCompletion) {
-    fireConfetti();
-  }
-}
-
-function navigate(dir) {
-  if (dir === 1 && cards[state.current] && cards[state.current].isCompletion) {
-    const chooserIdx = cards.findIndex(c => c.sectionLabel === 'Choose Your Agent');
-    if (chooserIdx !== -1) {
-      state.current = chooserIdx;
-      updateUI();
-      return;
-    }
-  }
-  const seq = getSequence();
-  const pos = seq.indexOf(state.current);
-  const next = pos + dir;
-  if (next >= 0 && next < seq.length) {
-    state.current = seq[next];
-    updateUI();
-  }
-}
-
+// ─────────────────────────────────────────────
+// SCROLL NAVIGATION
+// ─────────────────────────────────────────────
 function goTo(i) {
-  // If navigating to an agent card, update activeTrack to match
-  const t = cards[i].track;
-  if (['sales','employee','service'].includes(t)) state.activeTrack = t;
-  state.current = i;
-  updateUI();
+  const card = document.getElementById('card-' + i);
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function goToAppendixA() {
@@ -2046,33 +1947,8 @@ function goToAppendixA() {
 }
 
 function goToFirstStep(track) {
-  const idx = cards.findIndex(c => c.track === track && !c.isOverview && !c.isCompletion);
+  const idx = cards.findIndex(c => c.track === track && !c.isIntro && !c.isOverview && !c.isCompletion);
   if (idx !== -1) goTo(idx);
-}
-
-function switchTrack(track) {
-  if (track === state.activeTrack) return;
-  const wasAgentCard = ['sales','employee','service'].includes(cards[state.current].track);
-  state.activeTrack = track;
-  if (wasAgentCard) {
-    const first = cards.findIndex(c => c.track === track);
-    if (first !== -1) state.current = first;
-  }
-  updateUI();
-}
-
-function chooseTrack(track) {
-  state.activeTrack = track;
-  const firstSec1 = cards.findIndex(c => c.sectionNum === "1" && c.track === "shared");
-  if (firstSec1 !== -1) state.current = firstSec1;
-  updateUI();
-}
-
-function startAgentTrack(track) {
-  state.activeTrack = track;
-  const first = cards.findIndex(c => c.track === track);
-  if (first !== -1) state.current = first;
-  updateUI();
 }
 
 function copyCard(btn, text) {
@@ -2139,15 +2015,40 @@ render();
     navItem.classList.toggle('section-complete', allChecked);
   }
 
+  function updateTrackCompletion(track) {
+    if (!['sales','employee','service'].includes(track)) return;
+    const trackCards = cards
+      .map((c, i) => ({ c, i }))
+      .filter(x => x.c.track === track && !x.c.isCompletion);
+    const allDone = trackCards.every(({ i }) => {
+      const cardEl = document.getElementById('card-' + i);
+      if (!cardEl) return false;
+      const boxes = cardEl.querySelectorAll('input[type="checkbox"]');
+      if (boxes.length === 0) return true;
+      return Array.from(boxes).every(b => b.checked);
+    });
+    const compIdx = cards.findIndex(c => c.isCompletion && c.track === track);
+    if (compIdx === -1) return;
+    const compCard = document.getElementById('card-' + compIdx);
+    const compNav  = document.getElementById('nav-' + compIdx);
+    if (compCard) compCard.classList.toggle('completion-unlocked', allDone);
+    if (compNav)  compNav.classList.toggle('completion-unlocked', allDone);
+  }
+
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('change', e => {
       if (e.target && e.target.matches('input[type="checkbox"]')) {
         updateSectionCompletion(card);
-        checkTrackCompletion(card);
+        const idx = parseInt(card.id.replace('card-', ''), 10);
+        const track = cards[idx] && cards[idx].track;
+        updateTrackCompletion(track);
       }
     });
     updateSectionCompletion(card);
   });
+
+  // Initial pass — hide any completion cards whose tracks aren't done yet.
+  ['employee','sales','service'].forEach(updateTrackCompletion);
 })();
 
 // Confetti burst — Salesforce brand colors
@@ -2221,12 +2122,19 @@ function fireConfetti() {
       items.forEach(b => {
         if (b.checked !== target) {
           b.checked = target;
-          // Dispatch a real change event so the existing section-complete tracker
-          // and the completion-gate (checkTrackCompletion) both react.
+          // Dispatch a real change event so the section-complete tracker reacts.
           b.dispatchEvent(new Event('change', { bubbles: true }));
         }
       });
       syncLabel();
+      // After a Check All (not Uncheck All), advance to the next card.
+      if (target) {
+        const card = list.closest('.card');
+        const nextCard = card && card.nextElementSibling && card.nextElementSibling.classList.contains('card')
+          ? card.nextElementSibling
+          : null;
+        if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
 
     list.addEventListener('change', e => {
@@ -2237,46 +2145,82 @@ function fireConfetti() {
   });
 })();
 
-function checkTrackCompletion(changedCardEl) {
-  const idx = parseInt(changedCardEl.id.replace('card-', ''), 10);
-  const track = cards[idx] && cards[idx].track;
-  if (!['sales','employee','service'].includes(track)) return;
+// Highlight the sidebar item whose card is currently in view
+(function() {
+  const cardEls = document.querySelectorAll('.card');
+  if (!cardEls.length) return;
 
-  // Every non-completion card in this track must have its sidebar nav item
-  // marked section-complete. Cards without checkboxes are skipped.
-  const trackIndices = cards
-    .map((c, i) => ({ c, i }))
-    .filter(x => x.c.track === track && !x.c.isCompletion);
-
-  const allDone = trackIndices.every(({ c, i }) => {
-    const cardEl = document.getElementById('card-' + i);
-    if (!cardEl) return false;
-    const boxes = cardEl.querySelectorAll('input[type="checkbox"]');
-    if (boxes.length === 0) return true; // cards with no checkboxes are auto-complete
-    return Array.from(boxes).every(b => b.checked);
+  const navItems = {};
+  cardEls.forEach(card => {
+    const idx = card.id.replace('card-', '');
+    navItems[idx] = document.getElementById('nav-' + idx);
   });
 
-  if (allDone && !state.unlockedCompletion[track]) {
-    state.unlockedCompletion[track] = true;
-    // Reveal the completion nav-item
-    const compIdx = cards.findIndex(c => c.isCompletion && c.track === track);
-    if (compIdx !== -1) {
-      const navItem = document.getElementById('nav-' + compIdx);
-      if (navItem) navItem.classList.add('completion-unlocked');
-    }
-    updateUI();
-  } else if (!allDone && state.unlockedCompletion[track]) {
-    state.unlockedCompletion[track] = false;
-    const compIdx = cards.findIndex(c => c.isCompletion && c.track === track);
-    if (compIdx !== -1) {
-      const navItem = document.getElementById('nav-' + compIdx);
-      if (navItem) navItem.classList.remove('completion-unlocked');
-      // If the user is currently *on* the completion card, bounce them off it
-      if (state.current === compIdx) state.current = compIdx - 1;
-    }
-    updateUI();
+  function setActive(idx) {
+    Object.keys(navItems).forEach(k => {
+      if (navItems[k]) navItems[k].classList.toggle('active', k === idx);
+    });
+    cardEls.forEach(card => {
+      const k = card.id.replace('card-', '');
+      card.classList.toggle('card-active', k === idx);
+    });
+    const activeNav = navItems[idx];
+    if (activeNav) activeNav.scrollIntoView({ block: 'nearest' });
   }
-}
+
+  // Use rootMargin so the "active" zone is the top third of the viewport.
+  const observer = new IntersectionObserver(entries => {
+    // Pick whichever observed card is closest to the top of the active zone.
+    const visible = entries
+      .filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length) {
+      const idx = visible[0].target.id.replace('card-', '');
+      setActive(idx);
+    }
+  }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+
+  cardEls.forEach(c => observer.observe(c));
+})();
+
+// Fire confetti once per completion card on first reach
+(function() {
+  const completionCards = document.querySelectorAll('.card[data-completion="true"]');
+  if (!completionCards.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        fireConfetti();
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  completionCards.forEach(c => observer.observe(c));
+})();
+
+// Document-scroll progress bar
+(function() {
+  const fill = document.getElementById('progressFill');
+  const label = document.getElementById('progressLabel');
+  if (!fill) return;
+  let ticking = false;
+  function update() {
+    const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = scrollMax > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollMax) * 100)) : 100;
+    fill.style.width = pct + '%';
+    if (label) label.textContent = Math.round(pct) + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+  update();
+})();
 </script>
 </body>
 </html>

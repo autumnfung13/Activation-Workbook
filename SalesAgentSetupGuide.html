@@ -1092,6 +1092,7 @@
         <div class="progress-track">
           <div class="progress-fill" id="progressFill" style="width:0%"></div>
         </div>
+        <span class="progress-label" id="progressLabel">0%</span>
       </div>
 
       <!-- Cards -->
@@ -2202,12 +2203,14 @@ function fireConfetti() {
 // Document-scroll progress bar
 (function() {
   const fill = document.getElementById('progressFill');
+  const label = document.getElementById('progressLabel');
   if (!fill) return;
   let ticking = false;
   function update() {
     const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
     const pct = scrollMax > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollMax) * 100)) : 100;
     fill.style.width = pct + '%';
+    if (label) label.textContent = Math.round(pct) + '%';
     ticking = false;
   }
   window.addEventListener('scroll', () => {
