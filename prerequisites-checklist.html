@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prerequisites & Org Checklist — Agentforce Sales Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      background: #f3f3f3;
+      color: #032d60;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(150deg, #032d60 0%, #5c25ca 35%, #0176d3 70%, #1b96ff 100%);
+      color: #fff;
+      padding: 4rem 2rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(27,150,255,0.2) 0%, rgba(92,37,202,0.15) 45%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header .eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #1b96ff;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(27,150,255,0.4);
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+      line-height: 1.15;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      opacity: 0.85;
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .badge:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .badge-pre {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    .badge-pre:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* ── Type badges (table column) ── */
+    .badge-type {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-agentforce   { background: #d8edff; color: #032d60; }
+    .badge-sales-agent  { background: #cdefc4; color: #0a5c28; }
+    .badge-service-agent { background: #fde8b3; color: #7a4500; }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(3,45,96,0.08);
+      overflow: hidden;
+      border: 1px solid #e5e5e5;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.4rem 2rem;
+      border-bottom: 2px solid #f3f3f3;
+      background: linear-gradient(90deg, #faf7ff 0%, #fafbfd 100%);
+      border-left: 4px solid #5c25ca;
+    }
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .icon-license  { background: #d8edff; }
+    .icon-settings { background: #cdefc4; }
+    .icon-perms    { background: #fde8b3; }
+    .icon-data     { background: #fce4e4; }
+
+    .card-header h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #032d60;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      padding: 1.8rem 2rem;
+    }
+
+    .card-note {
+      display: flex;
+      gap: 0.75rem;
+      background: #f0f7ff;
+      border-left: 3px solid #0176d3;
+      padding: 0.75rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      color: #032d60;
+      margin-bottom: 1.4rem;
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    thead tr {
+      background: #f0f7ff;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.65rem 1rem;
+      font-weight: 800;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #0176d3;
+      border-bottom: 2px solid #d8edff;
+    }
+
+    thead th:last-child {
+      text-align: center;
+      width: 70px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7fbff; }
+
+    tbody td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      color: #032d60;
+    }
+
+    .table-no-center-last tbody td:last-child,
+    .table-no-center-last thead th:last-child { text-align: left; }
+
+    tbody td:last-child {
+      text-align: center;
+    }
+
+    .check-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check-wrap input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #0176d3;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #0176d3;
+      margin: 1.4rem 0 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.78rem;
+      padding: 0 0 2.5rem;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Agentforce Activation Workshop</div>
+  <h1>Org Readiness Checklist</h1>
+  <p>To ensure you are able to successfully build and activate your agentforce agent, complete the steps below at least 24hrs before the workshop.</p>
+  <div class="badge-row">
+    <a class="badge badge-pre" href="#licenses">🪪 Licenses</a>
+    <a class="badge badge-pre" href="#org-settings">⚙️ Org Settings</a>
+    <a class="badge badge-pre" href="#permissions">🔑 User Permissions</a>
+    <a class="badge badge-pre" href="#data-readiness">📊 Data Readiness</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1.1 Licenses -->
+  <div class="card" id="licenses">
+    <div class="card-header">
+      <div class="card-icon icon-license">🪪</div>
+      <h2>1.1 &nbsp;Salesforce Edition &amp; Licenses</h2>
+    </div>
+    <div class="card-body">
+      <div class="card-note">
+        <span>ℹ️</span>
+        <span>Confirm licenses are provisioned in <strong>Setup → Company Information → Licenses</strong>.</span>
+      </div>
+      <table class="table-no-center-last">
+        <thead>
+          <tr>
+            <th style="width:16.6%">Type</th>
+            <th style="width:33.3%">Requirement</th>
+            <th style="width:50%">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-type badge-agentforce">Agentforce</span></td>
+            <td>Salesforce Edition</td>
+            <td>Enterprise or Unlimited Edition required</td>
+          </tr>
+          <tr>
+            <td><span class="badge-type badge-agentforce">Agentforce</span></td>
+            <td>Agentforce License</td>
+            <td>Agentforce for Sales or Agentforce Platform license provisioned</td>
+          </tr>
+          <tr>
+            <td><span class="badge-type badge-agentforce">Agentforce</span></td>
+            <td>Einstein Platform License</td>
+            <td>Required for Einstein Generative AI features</td>
+          </tr>
+          <tr>
+            <td><span class="badge-type badge-agentforce">Agentforce</span></td>
+            <td>Data Cloud License</td>
+            <td>Data Cloud for Salesforce required for agent grounding</td>
+          </tr>
+          <tr>
+            <td><span class="badge-type badge-sales-agent">Sales Agent</span></td>
+            <td>Sales Cloud License</td>
+            <td>Required for Account Management agent actions</td>
+          </tr>
+          <tr>
+            <td><span class="badge-type badge-service-agent">Service Agent</span></td>
+            <td>Service Cloud License</td>
+            <td>Required for customer-facing service agent actions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 1.2 Org Settings -->
+  <div class="card" id="org-settings">
+    <div class="card-header">
+      <div class="card-icon icon-settings">⚙️</div>
+      <h2>1.2 &nbsp;Org Settings</h2>
+    </div>
+    <div class="card-body">
+      <div class="card-note">
+        <span>⏱</span>
+        <span>Enable these settings at least <strong>24 hours before the workshop</strong>. Some features require a propagation window before they become active.</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>Where to Enable</th>
+            <th>Done?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Einstein Generative AI</td>
+            <td>Setup → Einstein Generative AI → Enable</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Agentforce Agents</td>
+            <td>Setup → Agents → Enable Agentforce</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Data Cloud</td>
+            <td>Setup → Data Cloud → Enable</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Einstein Activity Capture</td>
+            <td>Setup → Einstein Activity Capture → Enabled</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Sharing Settings</td>
+            <td>Org-Wide Defaults reviewed for Accounts, Contacts, Opportunities</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 1.3 User Permissions -->
+  <div class="card" id="permissions">
+    <div class="card-header">
+      <div class="card-icon icon-perms">🔑</div>
+      <h2>1.3 &nbsp;User Permissions</h2>
+    </div>
+    <div class="card-body">
+      <div class="card-note">
+        <span>ℹ️</span>
+        <span>Create a Permission Set combining these permissions and assign it to all workshop participants before the session.</span>
+      </div>
+      <p class="section-label">Build Team (Admins / Workshop Participants)</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Permission</th>
+            <th>Where to Assign</th>
+            <th>Done?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Customize Application</td>
+            <td>System Permissions on Profile or Permission Set</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Manage Einstein Features</td>
+            <td>Permission Set: Einstein AI Permissions</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Agentforce Admin</td>
+            <td>Permission Set: Agentforce Admin</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Data Cloud Admin</td>
+            <td>Permission Set: Data Cloud Admin</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>View Setup and Configuration</td>
+            <td>System Permissions</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 1.4 Data Readiness -->
+  <div class="card" id="data-readiness">
+    <div class="card-header">
+      <div class="card-icon icon-data">📊</div>
+      <h2>1.4 &nbsp;Data Readiness</h2>
+    </div>
+    <div class="card-body">
+      <div class="card-note">
+        <span>🔍</span>
+        <span>Agent output quality depends on the completeness of the underlying data. Run a report or create a list view to confirm data quality before the workshop.</span>
+      </div>
+
+      <p class="section-label">Account Data — Required for <span class="badge-type badge-sales-agent">Sales Agent</span></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Data Check</th>
+            <th>Recommended Threshold</th>
+            <th>Done?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Accounts have Owner assigned</td>
+            <td>100%</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Accounts have Industry populated</td>
+            <td>≥ 80%</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Accounts have Last Activity Date within 90 days</td>
+            <td>≥ 60%</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Open Opportunities linked to Accounts</td>
+            <td>Present in org</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Contacts linked to Accounts</td>
+            <td>≥ 1 contact per active Account</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="section-label" style="margin-top:1.8rem;">Knowledge Articles — Important for <span class="badge-type badge-service-agent">Service Agent</span></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Data Check</th>
+            <th>Notes</th>
+            <th>Done?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Knowledge Articles exist in Salesforce Knowledge</td>
+            <td>At least 10 articles recommended for testing</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Articles are categorized and published</td>
+            <td>Draft articles will not surface in agent responses</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+          <tr>
+            <td>Data Categories map to agent audience</td>
+            <td>Internal-only articles should be restricted appropriately</td>
+            <td><span class="check-wrap"><input type="checkbox" /></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>Agentforce Sales Agent Workshop · Org Readiness Checklist</footer>
+
+</body>
+</html>
