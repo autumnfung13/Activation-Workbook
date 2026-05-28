@@ -2,7 +2,24 @@
   "permissions": {
     "allow": [
       "Bash(git init *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(cat /tmp/claude-hook-check.txt 2>/dev/null; cmp \"/Users/autumn.fung/Downloads/GTME/Activation Exp Cloud Files/SalesAgentSetupGuide.html\" \"/Users/autumn.fung/Downloads/GTME/Activation Exp Cloud Files/index.html\" && echo \"SYNC: identical\" || echo \"SYNC: DIVERGED\")",
+      "Read(//private/tmp/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; if [ \"$f\" = \"/Users/autumn.fung/Downloads/GTME/Activation Exp Cloud Files/SalesAgentSetupGuide.html\" ]; then cp -- \"$f\" \"/Users/autumn.fung/Downloads/GTME/Activation Exp Cloud Files/index.html\"; fi; } 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   }
 }
