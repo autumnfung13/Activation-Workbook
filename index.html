@@ -2172,6 +2172,72 @@ function fireConfetti() {
   });
 })();
 
+// Persist all checkbox state to localStorage and restore on load
+(function() {
+  const STORAGE_KEY = 'salesAgentSetupGuide.checkboxState.v1';
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveState(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // Quota or private-mode failure — fail silently; persistence is best-effort.
+    }
+  }
+
+  // Stable key per checkbox: card index + position within card.
+  function tagCheckboxes() {
+    const tagged = [];
+    document.querySelectorAll('.card').forEach(card => {
+      const cardIdx = card.id.replace('card-', '');
+      const boxes = card.querySelectorAll('input[type="checkbox"]');
+      boxes.forEach((cb, i) => {
+        const key = `${cardIdx}:${i}`;
+        cb.dataset.persistKey = key;
+        tagged.push(cb);
+      });
+    });
+    return tagged;
+  }
+
+  const state = loadState();
+  const boxes = tagCheckboxes();
+
+  // Restore — set checked state and dispatch a change event so existing
+  // trackers (step-done strikethrough, section-complete sidebar checkmark,
+  // Check All label sync) react as if the user clicked.
+  boxes.forEach(cb => {
+    const stored = state[cb.dataset.persistKey];
+    if (stored === true && !cb.checked) {
+      cb.checked = true;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+
+  // Save on every change.
+  document.addEventListener('change', e => {
+    const cb = e.target;
+    if (!(cb instanceof HTMLInputElement)) return;
+    if (cb.type !== 'checkbox') return;
+    if (!cb.dataset.persistKey) return;
+    const current = loadState();
+    if (cb.checked) {
+      current[cb.dataset.persistKey] = true;
+    } else {
+      delete current[cb.dataset.persistKey];
+    }
+    saveState(current);
+  });
+})();
+
 // Highlight the sidebar item whose card is currently in view
 (function() {
   const cardEls = document.querySelectorAll('.card');
