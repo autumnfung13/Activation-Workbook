@@ -246,7 +246,6 @@
       border-radius: 12px;
       border: 1px solid var(--sf-border);
       box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      overflow: hidden;
       display: block;
       scroll-margin-top: 120px;
       margin-bottom: 28px;
@@ -268,6 +267,8 @@
       display: flex;
       align-items: flex-start;
       gap: 18px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
     }
 
     .card-num {
@@ -402,6 +403,75 @@
     .step-note .step-note-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
     .step-note.warning { background: var(--sf-yellow-bg); border-left: 3px solid var(--sf-yellow-border); color: #6B4F00; }
     .step-note.note    { background: var(--sf-note-bg); border-left: 3px solid var(--sf-blue); color: var(--sf-dark); }
+
+    /* ── Inline tooltip ── */
+    .tooltip {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      margin-left: 4px;
+      background: var(--sf-blue);
+      color: white;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      vertical-align: middle;
+      cursor: help;
+      transition: background 0.15s;
+    }
+    .tooltip:hover .tooltip-icon,
+    .tooltip:focus .tooltip-icon { background: #005FB2; }
+    .tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--sf-dark);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.45;
+      padding: 8px 12px;
+      border-radius: 6px;
+      width: max-content;
+      max-width: 280px;
+      white-space: normal;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+      z-index: 60;
+      pointer-events: none;
+    }
+    .tooltip::before {
+      content: "";
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--sf-dark);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+      z-index: 60;
+      pointer-events: none;
+    }
+    .tooltip:hover::after,
+    .tooltip:hover::before,
+    .tooltip:focus::after,
+    .tooltip:focus::before {
+      opacity: 1;
+      visibility: visible;
+    }
 
     /* ── Steps ── */
     .section-intro {
@@ -1144,116 +1214,34 @@ const cards = [
     `
   },
 
-  // ── SECTION 1 ──
+  // ── SECTION 0 — PREREQUISITES ──
   {
     sectionLabel: "Section 0: Prerequisites & Org Checklist",
     sectionNum: "0",
-    title: "0.1 Salesforce Edition & Licenses",
-    subtitle: "Confirm all required licenses are provisioned before the workshop.",
+    title: "0.1 Org Readiness Checklist",
+    subtitle: "Confirm licenses, org settings, permissions, and data quality before the workshop.",
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce editions & licenses overview
     body: `
-      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Confirm licenses are provisioned in <strong>Setup → Company Information → Licenses</strong>.</span></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Type</th><th>Requirement</th><th>Details</th><th>✓</th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Salesforce Edition</td><td>Enterprise or Unlimited Edition required</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Agentforce License</td><td>Agentforce for Sales or Agentforce Platform license provisioned</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Einstein Platform License</td><td>Required for Einstein Generative AI features</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td><span class="badge-type agentforce">Agentforce</span></td><td>Data Cloud License</td><td>Data Cloud for Salesforce required for agent grounding</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td><span class="badge-type sales-agent">Sales Agent</span></td><td>Sales Cloud License</td><td>Required for Account Management agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td><span class="badge-type service-agent">Service Agent</span></td><td>Service Cloud License</td><td>Required for customer-facing service agent actions</td><td><input type="checkbox" class="row-check"></td></tr>
-        </tbody>
-      </table></div>
+      <p style="font-size: 16px; color: var(--sf-text); line-height: 1.65; margin-bottom: 24px;">To ensure you are able to successfully build and activate your Agentforce agent, complete the steps below before the workshop.</p>
+      <a href="https://storm-58b581f9c0e9b8.my.salesforce-sites.com/activation/AAActivationWorkshopPrerequisites" target="_blank" rel="noopener" class="intro-cta" style="text-decoration: none; display: inline-flex; align-items: center;">Go to Prerequisites →</a>
     `
   },
-  {
-    sectionLabel: "Section 0: Prerequisites & Org Checklist",
-    sectionNum: "0",
-    title: "0.2 Org Settings",
-    subtitle: "Enable required platform settings before the workshop.",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce admin org-setup trail
-    body: `
-      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Enable these settings at least <strong>24 hours before the workshop</strong>. Some features require a propagation window before they become active.</span></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Setting</th><th>Where to Enable</th><th>✓</th></tr></thead>
-        <tbody>
-          <tr><td>Einstein Generative AI</td><td>Setup → Einstein Generative AI → Enable</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Agentforce Agents</td><td>Setup → Agents → Enable Agentforce</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Data Cloud</td><td>Setup → Data Cloud → Enable</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Einstein Activity Capture</td><td>Setup → Einstein Activity Capture → Enabled</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Sharing Settings</td><td>Org-Wide Defaults reviewed for Accounts, Contacts, Opportunities</td><td><input type="checkbox" class="row-check"></td></tr>
-        </tbody>
-      </table></div>
-    `
-  },
-  {
-    sectionLabel: "Section 0: Prerequisites & Org Checklist",
-    sectionNum: "0",
-    title: "0.3 User Permissions",
-    subtitle: "Assign the right permissions to all workshop participants.",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Sets trail
-    body: `
-      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Create a Permission Set combining these permissions and assign it to all workshop participants before the session.</span></div>
-      <p class="section-intro">The users who will build and test the agents need the following permissions assigned.</p>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Permission</th><th>Where to Assign</th><th>✓</th></tr></thead>
-        <tbody>
-          <tr><td>Customize Application</td><td>System Permissions on Profile or Permission Set</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Manage Einstein Features</td><td>Permission Set: Einstein AI Permissions</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Agentforce Admin</td><td>Permission Set: Agentforce Admin</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Data Cloud Admin</td><td>Permission Set: Data Cloud Admin</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>View Setup and Configuration</td><td>System Permissions</td><td><input type="checkbox" class="row-check"></td></tr>
-        </tbody>
-      </table></div>
-    `
-  },
-  {
-    sectionLabel: "Section 0: Prerequisites & Org Checklist",
-    sectionNum: "0",
-    title: "0.4 Data Readiness",
-    subtitle: "Confirm data quality in the org before the workshop.",
-    track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Data quality / data readiness trail
-    body: `
-      <div class="callout prework"><span class="callout-icon">📋</span><span><strong>Pre-Work:</strong> Run a SOQL report or list view to confirm data quality before the workshop.</span></div>
-      <p class="section-intro">Agent output quality depends on the completeness of the underlying data.</p>
-      <div class="sub-label">Account Data — Required for <span class="badge-type sales-agent">Sales Agent</span></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Data Check</th><th>Recommended Threshold</th><th>✓</th></tr></thead>
-        <tbody>
-          <tr><td>Accounts have Owner assigned</td><td>100%</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Accounts have Industry populated</td><td>≥ 80%</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Accounts have Last Activity Date within 90 days</td><td>≥ 60%</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Open Opportunities linked to Accounts</td><td>Present in org</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Contacts linked to Accounts</td><td>≥ 1 contact per active Account</td><td><input type="checkbox" class="row-check"></td></tr>
-        </tbody>
-      </table></div>
-      <div class="sub-label">Knowledge Articles — Important for <span class="badge-type service-agent">Service Agent</span></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Data Check</th><th>Notes</th><th>✓</th></tr></thead>
-        <tbody>
-          <tr><td>Knowledge Articles exist in Salesforce Knowledge</td><td>At least 10 articles recommended for testing</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Articles are categorized and published</td><td>Draft articles will not surface in agent responses</td><td><input type="checkbox" class="row-check"></td></tr>
-          <tr><td>Data Categories map to agent audience</td><td>Internal-only articles should be restricted appropriately</td><td><input type="checkbox" class="row-check"></td></tr>
-        </tbody>
-      </table></div>
-    `
-  },
-  // ── SECTION 2 ──
+  // ── SECTION 1 — EINSTEIN ──
   {
     sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
     sectionNum: "1",
-    title: "1.1 Enable Einstein Generative AI",
-    subtitle: "Turn on the Einstein platform before building either agent.",
+    title: "1.1 Enable Einstein Generative AI & Verify Trust Layer",
+    subtitle: "Turn on the Einstein platform and confirm Trust Layer data masking in one Setup visit.",
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Generative AI Quick Start
     body: `
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Full <span class="tooltip" tabindex="0" data-tooltip="A built-in security layer that masks sensitive data, enforces retention rules, and audits every Einstein interaction.">Trust Layer<span class="tooltip-icon" aria-hidden="true">?</span></span> configuration options, including zero data retention and grounding controls, are covered in <strong>Appendix B</strong>.</span></div>
       <ol class="steps">
         <li><div class="step-content">Go to <strong>Setup → Einstein generative AI → Einstein Setup</strong>.</div></li>
         <li><div class="step-content">Enable <strong>Einstein Setup</strong> to on.</div></li>
+        <li><div class="step-content">From the same page, click <strong>Go To Einstein Trust Layer</strong>.</div></li>
+        <li><div class="step-content">Confirm <strong>Large Language Model Data Masking</strong> is set to on.</div></li>
       </ol>
     `
   },
@@ -1287,27 +1275,56 @@ const cards = [
       </ol>
     `
   },
+
+  // ── SECTION 2 — DATA LIBRARY ──
   {
-    sectionLabel: "Section 1: Einstein & Data Cloud Configuration",
-    sectionNum: "1",
-    title: "1.4 Verify Einstein Trust Layer",
-    subtitle: "Confirm data masking is active.",
+    sectionLabel: "Section 2: Data Library Setup",
+    sectionNum: "2",
+    title: "2.1 Create Your Data Library",
+    subtitle: "Set up an Agentforce Data Library to ground the agent in Knowledge.",
     track: "shared",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer trail
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
     body: `
-      <div class="callout note"><span class="callout-icon">ℹ️</span><span>Full Trust Layer configuration options, including zero data retention and grounding controls, are covered in <strong>Appendix B</strong>.</span></div>
+      <div class="callout warning"><span class="callout-icon">⚠️</span><span><strong>Prerequisites for this step:</strong> your org must have Knowledge enabled with at least some articles created. If Knowledge is not set up yet, go to <strong>Service Setup Assistant</strong> (Setup → search <strong>Service Setup Assistant</strong>) or visit Salesforce Go (click the ⚙️ gear icon in the top right corner → select <strong>Salesforce Go</strong> → navigate to <strong>Einstein Knowledge Creation</strong>) to initiate the Knowledge setup flow before continuing. Skipping this will result in no data source being available to select.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Einstein Setup</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Go To Einstein Trust Layer</strong>.</div></li>
-        <li><div class="step-content">Confirm <strong>Large Language Model Data Masking</strong> is set to on.</div></li>
+        <li><div class="step-content">Go to <strong>Setup</strong> → search and select <strong>Agentforce Data Library</strong>.</div></li>
+        <li><div class="step-content">Click <strong>New Library +</strong>.</div></li>
+        <li><div class="step-content">Enter a unique name (e.g. <code>Service Agent Library</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service Agent Library')">Copy</button>).</div></li>
+        <li><div class="step-content">Enter a description (e.g. <code>The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.</code><button type="button" class="copy-inline" onclick="copyInline(this, 'The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.')">Copy</button>).</div></li>
+        <li><div class="step-content">Add a data source by clicking on <strong>Select a data type…</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge</strong>.<div class="step-note warning"><span class="step-note-icon">⚠️</span><span>Once set, you cannot change the data source type for this specific library.</span></div></div></li>
+        <li><div class="step-content">Select the first identifying field as <strong>Title</strong>.</div></li>
+        <li><div class="step-content">Select the second identifying field as <strong>Summary</strong>.</div></li>
+        <li><div class="step-content">Scroll down and check off <strong>Chat Answer</strong>, <strong>Details</strong>, <strong>Resolution</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong> at the bottom.<div class="step-note note"><span class="step-note-icon">⏱️</span><span>This can take some time — wait until the status reflects <strong>Ready</strong> in green. You may need to refresh to confirm.</span></div></div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 2: Data Library Setup",
+    sectionNum: "2",
+    title: "2.2 Connect Your Data Library",
+    subtitle: "Ground the agent's responses by connecting a data library.",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Click <strong>Data</strong> on the left hand bar.</div></li>
+        <li><div class="step-content">Click <strong>Data Library</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Select a library…</strong>.</div></li>
+        <li><div class="step-content">Connect your data library from the dropdown options.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Commit Version</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong> again.</div></li>
       </ol>
     `
   },
 
   // ── SECTION 3 — EMPLOYEE AGENT ──
   {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
     title: "Build an Employee Agent",
     subtitle: "Overview of the template, key inputs, and best practices before you start building.",
     track: "employee",
@@ -1318,7 +1335,7 @@ const cards = [
           <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Employee Agent</span></div></div>
           <p>The Agentforce Employee Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
           <h3>Define the Description, Role, and Company</h3>
-          <p>These inputs serve as the primary system prompt that <strong>grounds the Atlas Reasoning Engine in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
+          <p>These inputs serve as the primary system prompt that <strong>grounds the <span class="tooltip" tabindex="0" data-tooltip="Salesforce's AI engine that decides which actions an agent takes for each user request.">Atlas Reasoning Engine<span class="tooltip-icon" aria-hidden="true">?</span></span> in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
           <h3>Create the Agent User</h3>
           <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
           <button class="ao-start-btn" onclick="goToFirstStep('employee')">Start Building →</button>
@@ -1346,36 +1363,36 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.1 Create the Agent in Agentforce Studio",
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
+    title: "3.1 Create the Agent in Agentforce Studio",
     subtitle: "Launch Agentforce Studio and create a new Employee Agent from the template.",
     track: "employee",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Employee Agent trail
     body: `
       <ol class="steps">
-        <li><div class="step-content">Click <img class="inline-icon" src="app%20launcher.png" alt="App Launcher icon" /> to open the <strong>App Launcher</strong>, then search for and select <strong>Agentforce Studio</strong>.</div></li>
+        <li><div class="step-content">Click <img class="inline-icon" src="app%20launcher.png" alt="App Launcher icon" /> to open the <strong>App Launcher</strong>, then search for and select <strong class="tooltip" tabindex="0" data-tooltip="The visual builder where you create, test, and activate agents — no code required.">Agentforce Studio<span class="tooltip-icon" aria-hidden="true">?</span></strong>.</div></li>
         <li><div class="step-content">Click <strong>New Agent</strong>.</div></li>
         <li><div class="step-content">Find <strong>Agentforce Employee Agent</strong>.</div></li>
         <li><div class="step-content">Click <strong>Select Template</strong>.</div></li>
         <li><div class="step-content">For the <strong>Agent Name</strong>, input <code>Employee Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Employee Agent')">Copy</button>.</div></li>
-        <li><div class="step-content">For <strong>Developer Name</strong>, <code>Employee_Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Employee_Agent')">Copy</button> autopopulates.</div></li>
+        <li><div class="step-content">For <strong>Developer Name</strong>, <code>Employee_Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Employee_Agent')">Copy</button> autopopulates.<div class="step-note note"><span class="step-note-icon">ℹ️</span><span>The Developer Name field auto-populates based on the Agent Name — no need to edit it.</span></div></div></li>
         <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
       </ol>
     `
   },
   {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.2 Create a Subagent From Asset Library",
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
+    title: "3.2 Create a Subagent From Asset Library",
     subtitle: "Add prebuilt subagents from the Asset Library and activate the agent.",
     track: "employee",
     trailhead: "https://trailhead.salesforce.com/", // TODO: SubAgents / Asset Library trail
     body: `
       <ol class="steps">
-        <li><div class="step-content">Hover over the side of <strong>Subagents</strong> — a <strong>+</strong> icon will appear.</div></li>
+        <li><div class="step-content">Hover over the side of <strong class="tooltip" tabindex="0" data-tooltip="Sub-agents are smaller, focused agents that handle a specific job (e.g. summarizing a record). The main agent delegates to them so each one stays narrow and easier to test.">Subagents<span class="tooltip-icon" aria-hidden="true">?</span></strong> — a <strong>+</strong> icon will appear.</div></li>
         <li><div class="step-content">Click on the <strong>+</strong> icon.</div></li>
-        <li><div class="step-content">Click <strong>Add from Asset Library</strong>.</div></li>
+        <li><div class="step-content">Click <strong class="tooltip" tabindex="0" data-tooltip="The Asset Library is Salesforce's catalog of prebuilt sub-agents and components you can drop into your agent — no need to build them from scratch.">Add from Asset Library<span class="tooltip-icon" aria-hidden="true">?</span></strong>.</div></li>
         <li><div class="step-content">Search <code>Single Record Summary</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Single Record Summary')">Copy</button> Subagent.</div></li>
         <li><div class="step-content">Click <strong>Select</strong>.</div></li>
         <li><div class="step-content">Search <code>General CRM</code><button type="button" class="copy-inline" onclick="copyInline(this, 'General CRM')">Copy</button> Subagent.</div></li>
@@ -1390,9 +1407,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
-    sectionNum: "2",
-    title: "2.3 Test Employee Agent",
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
+    title: "3.3 Test Employee Agent",
     subtitle: "Use the built-in Preview to verify the agent's behavior.",
     track: "employee",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
@@ -1407,7 +1424,7 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 2: Internal Employee-Facing Agent",
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
     sectionNum: "★",
     title: "🎉 You've Built Your Employee Agent!",
     subtitle: "Every step in the Employee track is checked off. Here's what to do next.",
@@ -1433,8 +1450,8 @@ const cards = [
 
   // ── SECTION 4 — SALES AGENT ──
   {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
+    sectionLabel: "Section 4: Sales Agent — Account Management",
+    sectionNum: "4",
     title: "Build a Sales Agent",
     subtitle: "Overview of the template, key inputs, and best practices before you start building.",
     track: "sales",
@@ -1473,9 +1490,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.1 Enable Agentforce for Sales",
+    sectionLabel: "Section 4: Sales Agent — Account Management",
+    sectionNum: "4",
+    title: "4.1 Enable Agentforce for Sales",
     subtitle: "Turn on Account Management and the supporting Sales features in Setup.",
     track: "sales",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce for Sales setup
@@ -1492,15 +1509,15 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.2 Configure Sales Agent",
+    sectionLabel: "Section 4: Sales Agent — Account Management",
+    sectionNum: "4",
+    title: "4.2 Configure Sales Agent",
     subtitle: "Add the Record Research component to the Account page in Lightning App Builder.",
     track: "sales",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Lightning App Builder trail
     body: `
       <ol class="steps">
-        <li><div class="step-content">In <strong>Setup</strong>, search <strong>Lightning App Builder</strong>.</div></li>
+        <li><div class="step-content">In <strong>Setup</strong>, search <strong class="tooltip" tabindex="0" data-tooltip="Salesforce's drag-and-drop page editor for adding components to record pages without code.">Lightning App Builder<span class="tooltip-icon" aria-hidden="true">?</span></strong>.</div></li>
         <li><div class="step-content">Click <strong>Account - Default</strong>.</div></li>
         <li><div class="step-content">Click <strong>Edit</strong>.</div></li>
         <li><div class="step-content">Search <strong>Record Research</strong> in the left-hand components search bar.</div></li>
@@ -1519,9 +1536,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
-    sectionNum: "3",
-    title: "3.3 Test Sales Agent",
+    sectionLabel: "Section 4: Sales Agent — Account Management",
+    sectionNum: "4",
+    title: "4.3 Test Sales Agent",
     subtitle: "Pick an account with rich activity data and click Research to see results.",
     track: "sales",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
@@ -1542,7 +1559,7 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 3: Sales Agent — Account Management",
+    sectionLabel: "Section 4: Sales Agent — Account Management",
     sectionNum: "★",
     title: "🎉 You've Built Your Sales Agent!",
     subtitle: "Every step in the Sales track is checked off. Here's what to do next.",
@@ -1570,10 +1587,10 @@ const cards = [
     `
   },
 
-  // ── SECTION 4 (SERVICE) ──
+  // ── SECTION 5 (SERVICE) ──
   {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
+    sectionLabel: "Section 5: Service Agent — Customer Support",
+    sectionNum: "5",
     title: "Build a Service Agent",
     subtitle: "Overview of the template, key inputs, and best practices before you start building.",
     track: "service",
@@ -1612,9 +1629,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.1 Create the Agent in Agentforce Studio",
+    sectionLabel: "Section 5: Service Agent — Customer Support",
+    sectionNum: "5",
+    title: "5.1 Create the Agent in Agentforce Studio",
     subtitle: "Launch Agentforce Studio and create a new Service Agent from the template.",
     track: "service",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Agentforce Service Agent trail
@@ -1632,51 +1649,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.2 Create Your Data Library",
-    subtitle: "Set up an Agentforce Data Library to ground the agent in Knowledge.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup</strong> → search and select <strong>Agentforce Data Library</strong>.</div></li>
-        <li><div class="step-content">Click <strong>New Library +</strong>.</div></li>
-        <li><div class="step-content">Enter a unique name (e.g. <code>Service Agent Library</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service Agent Library')">Copy</button>).</div></li>
-        <li><div class="step-content">Enter a description (e.g. <code>The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.</code><button type="button" class="copy-inline" onclick="copyInline(this, 'The central repository of knowledge articles, FAQs, and reference documents used by the FAQ Service Agent to resolve customer inquiries.')">Copy</button>).</div></li>
-        <li><div class="step-content">Add a data source by clicking on <strong>Select a data type…</strong>.</div></li>
-        <li><div class="step-content">Select <strong>Knowledge</strong>.<div class="step-note warning"><span class="step-note-icon">⚠️</span><span>Once set, you cannot change the data source type for this specific library.</span></div></div></li>
-        <li><div class="step-content">Select the first identifying field as <strong>Title</strong>.</div></li>
-        <li><div class="step-content">Select the second identifying field as <strong>Summary</strong>.</div></li>
-        <li><div class="step-content">Scroll down and check off <strong>Chat Answer</strong>, <strong>Details</strong>, <strong>Resolution</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Save</strong> at the bottom.<div class="step-note note"><span class="step-note-icon">⏱️</span><span>This can take some time — wait until the status reflects <strong>Ready</strong> in green. You may need to refresh to confirm.</span></div></div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.3 Connect Your Data Library",
-    subtitle: "Ground the agent's responses by connecting a data library.",
-    track: "service",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Data Library / Agent grounding
-    body: `
-      <ol class="steps">
-        <li><div class="step-content">Click <strong>Data</strong> on the left hand bar.</div></li>
-        <li><div class="step-content">Click <strong>Data Library</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Select a library…</strong>.</div></li>
-        <li><div class="step-content">Connect your data library from the dropdown options.</div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Commit Version</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Activate</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Activate</strong> again.</div></li>
-      </ol>
-    `
-  },
-  {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
-    sectionNum: "4",
-    title: "4.4 Test Service Agent",
+    sectionLabel: "Section 5: Service Agent — Customer Support",
+    sectionNum: "5",
+    title: "5.2 Test Service Agent",
     subtitle: "Use the built-in Preview to verify the agent's behavior.",
     track: "service",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Test an Agent trail
@@ -1689,7 +1664,7 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Section 4: Service Agent — Customer Support",
+    sectionLabel: "Section 5: Service Agent — Customer Support",
     sectionNum: "★",
     title: "🎉 You've Built Your Service Agent!",
     subtitle: "Every step in the Service track is checked off. Here's what to do next.",
@@ -1713,86 +1688,141 @@ const cards = [
     `
   },
 
-  // ── APPENDIX A ──
+  // ── APPENDIX A — EXTEND YOUR AGENT: DATA ──
   {
-    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionLabel: "Appendix A: Extend Your Agent - Data",
     sectionNum: "A",
     title: "A.1 Create a Data Stream",
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud Data Streams
-    subtitle: "Ingest CRM data into Data Cloud for agent grounding.",
+    subtitle: "Ingest Knowledge data into Data Cloud for agent grounding.",
     tag: "post",
-    tagLabel: "Post-Workshop",
+    tagLabel: "Watch Us Build",
     body: `
       <p class="section-intro">A Data Stream ingests data from a source into Data Cloud.</p>
       <div class="callout success"><span class="callout-icon">✅</span><span>Confirm the Data Stream shows a status of <strong>Active</strong> before proceeding to the next step.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Data Cloud → Data Streams</strong>.</div></li>
-        <li><div class="step-content">Click <strong>New</strong>.</div></li>
-        <li><div class="step-content">Select the data source type — for CRM data, choose <strong>Salesforce CRM</strong>.</div></li>
-        <li><div class="step-content">Select the objects to ingest: <strong>Account, Contact, Opportunity, Task</strong>.</div></li>
-        <li><div class="step-content">Choose the fields to include for each object.</div></li>
-        <li><div class="step-content">Set the refresh schedule — <strong>Hourly</strong> is recommended for sales data.</div></li>
-        <li><div class="step-content">Click <strong>Deploy</strong>. Data Cloud will begin ingesting records on the next scheduled run.</div></li>
+        <li><div class="step-content">Navigate to <strong>Data Cloud</strong>.</div></li>
+        <li><div class="step-content">Click on <strong>Data Streams</strong>.</div></li>
+        <li><div class="step-content">Select <strong>New Data Stream → Salesforce CRM</strong>.</div></li>
+        <li><div class="step-content">Click into <strong>View Objects</strong>.</div></li>
+        <li><div class="step-content">Find and select <strong>Knowledge (Knowledge_kav)</strong>.</div></li>
+        <li><div class="step-content">Select an <strong>Object Category</strong> (Other).</div></li>
+        <li><div class="step-content">Select fields to be ingested.</div></li>
+        <li><div class="step-content">Add any relevant filters (e.g. <code>Publication Status = Published</code>).</div></li>
+        <li><div class="step-content">Click <strong>Deploy</strong>.</div></li>
       </ol>
     `
   },
   {
-    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionLabel: "Appendix A: Extend Your Agent - Data",
     sectionNum: "A",
-    title: "A.2 Map to Data Model Objects (DMOs)",
+    title: "A.2 Map DLO to DMO",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Data Cloud DMO mapping
     track: "shared",
-    subtitle: "Normalize ingested data into a standard schema agents can query.",
+    subtitle: "Normalize ingested Knowledge data into a queryable schema.",
     tag: "post",
-    tagLabel: "Post-Workshop",
+    tagLabel: "Watch Us Build",
     body: `
-      <p class="section-intro">Data Model Objects normalize ingested data into a standard schema that agents and Einstein features can query.</p>
-      <div class="callout warning"><span class="callout-icon">⏱️</span><span>Field mapping is the most time-consuming part of this setup. Allocate at least 30–60 minutes depending on data complexity.</span></div>
+      <p class="section-intro">Mapping the Data Lake Object (DLO) to a <span class="tooltip" tabindex="0" data-tooltip="A standardized data structure inside Data Cloud that maps raw ingested fields onto a clean, queryable schema.">Data Model Object (DMO)<span class="tooltip-icon" aria-hidden="true">?</span></span> normalizes the ingested Knowledge data into a standard schema that agents and retrievers can query.</p>
+      <div class="callout note"><span class="callout-icon">ℹ️</span><span>You may need to create new fields in the DMO to mirror the source fields. Required fields must be mapped before the DMO can be activated.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Data Cloud → Data Model</strong>.</div></li>
-        <li><div class="step-content">For each Data Stream, map it to the corresponding standard DMO:
-          <ul>
-            <li>Account → <strong>Account DMO</strong></li>
-            <li>Contact → <strong>Individual DMO</strong> (or Contact DMO if available)</li>
-            <li>Opportunity → <strong>Sales Order DMO</strong></li>
-            <li>Task/Activity → <strong>Engagement DMO</strong></li>
-          </ul>
-        </div></li>
-        <li><div class="step-content">Map the source fields to the target DMO fields. Required fields must be mapped before the DMO can be activated.</div></li>
-        <li><div class="step-content">Click <strong>Save and Activate</strong> for each DMO mapping.</div></li>
+        <li><div class="step-content">From the <strong>Data Stream</strong> page, locate <strong>Data Mapping</strong> on the right-hand side of the page.</div></li>
+        <li><div class="step-content">Click <strong>Start</strong> under <strong>Data Mapping</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Select Objects</strong>.</div></li>
+        <li><div class="step-content">Type <code>Knowledge</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Knowledge')">Copy</button>.</div></li>
+        <li><div class="step-content">Select the <strong>+</strong> beside <strong>Knowledge Article Version</strong>.</div></li>
+        <li><div class="step-content">Map fields from <strong>DLO</strong> to <strong>DMO</strong>. You may need to create new fields in the DMO.</div></li>
+        <li><div class="step-content">Click <strong>Save and Close</strong>.</div></li>
       </ol>
     `
   },
   {
-    sectionLabel: "Appendix A: Data Cloud Advanced Setup",
+    sectionLabel: "Appendix A: Extend Your Agent - Data",
     sectionNum: "A",
-    title: "A.3 Ground the Sales Agent in Data Cloud",
-    trailhead: "https://trailhead.salesforce.com/", // TODO: Agent grounding with Data Cloud
+    title: "A.3 Build A Custom Retriever",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Custom Retriever / Search Index
     track: "shared",
-    subtitle: "Connect the activated DMOs to the Sales Agent as a data source.",
+    subtitle: "Configure a Search Index and Retriever so the agent can query Knowledge.",
     tag: "post",
-    tagLabel: "Post-Workshop",
+    tagLabel: "Watch Us Build",
     body: `
-      <p class="section-intro">Once DMOs are active and populated, connect them to the Sales Agent.</p>
-      <div class="callout success"><span class="callout-icon">✅</span><span>Test the agent after re-activation to confirm it retrieves enriched account data from Data Cloud in addition to standard CRM objects.</span></div>
+      <p class="section-intro">A Retriever lets the agent search and return the most relevant Knowledge articles from Data Cloud at runtime. Build the Search Index first so the retriever has something to query, then configure the retriever fields and citations the agent will return.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Confirm the retriever shows a status of <strong>Active</strong> before connecting it to your agent.</span></div>
       <ol class="steps">
-        <li><div class="step-content">Go to <strong>Setup → Agents</strong> and open the <strong>Sales Account Management Agent</strong>.</div></li>
-        <li><div class="step-content">In Agent Builder, navigate to <strong>Data Sources</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Add Data Source → Data Cloud</strong>.</div></li>
-        <li><div class="step-content">Select the DMOs configured in A.2.</div></li>
-        <li><div class="step-content">Set the data access scope to align with the rep's row-level security in Data Cloud.</div></li>
+        <li><div class="step-content">Click into the <strong>Search Index</strong> tab.</div></li>
+        <li><div class="step-content">Click <strong>New</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Easy Setup</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge Article Version</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-        <li><div class="step-content">Re-activate the agent to apply the new data source configuration.</div></li>
+        <li><div class="step-content">Click into the <strong>Agentforce Studio</strong> tab.</div></li>
+        <li><div class="step-content">Click <strong>Retrievers</strong>.</div></li>
+        <li><div class="step-content">Click <strong>New Retriever</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Individual Retriever</strong>.</div></li>
+        <li><div class="step-content">Under <strong>Retriever Type</strong>, select <strong>Data Cloud</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Default</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge Article Version</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge Article Version</strong> again.</div></li>
+        <li><div class="step-content">Under <strong>Define Filters</strong>, select <strong>All Documents</strong>.</div></li>
+        <li><div class="step-content">Under <strong>Configure Retriever Results</strong>, set the result count to <strong>20</strong>.</div></li>
+        <li><div class="step-content">For <strong>Fields to return</strong>, add the <strong>Details</strong> field.
+          <ul>
+            <li>Click into <strong>Field Name</strong> → <strong>Direct Attributes</strong> → <strong>Knowledge Article Version</strong> → select the field.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-content">Repeat to add the <strong>Title</strong> field.</div></li>
+        <li><div class="step-content">Repeat to add the <strong>URL</strong> field.</div></li>
+        <li><div class="step-content">Toggle on <strong>Standard Citations</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activate</strong>.</div></li>
       </ol>
     `
   },
 
-  // ── APPENDIX B ──
+  // ── APPENDIX B — EXTEND YOUR AGENT: AGENTIC DEVELOPMENT ──
   {
-    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
+    sectionLabel: "Appendix B: Extend Your Agent - Agentic Development",
     sectionNum: "B",
-    title: "B.1 Zero Data Retention",
+    title: "B.1 Clone A Prompt Template",
+    track: "shared",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Prompt Builder / Prompt Templates
+    subtitle: "Clone the Knowledge prompt template and wire it to your custom retriever.",
+    tag: "post",
+    tagLabel: "Watch Us Build",
+    body: `
+      <p class="section-intro">The default <strong>Answer Questions with Knowledge</strong> prompt template uses Salesforce's out-of-the-box dynamic retriever. Clone and edit it to wire in the custom Knowledge Article Version retriever built in A.3, then validate the output in Prompt Builder before connecting it to the agent.</p>
+      <div class="callout success"><span class="callout-icon">✅</span><span>Confirm results are accurate in Prompt Builder before moving on to the Agent Builder.</span></div>
+      <ol class="steps">
+        <li><div class="step-content">Navigate to <strong>Setup</strong>.</div></li>
+        <li><div class="step-content">Search for <strong>Prompt Builder</strong>.</div></li>
+        <li><div class="step-content">Open <strong>Answer Questions with Knowledge</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Deactivate</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save As New Version</strong>.</div></li>
+        <li><div class="step-content">Under the <strong>KNOWLEDGE</strong> heading, remove <code>{!$EinsteinSearch:sfdc_ai__DynamicRetriever.results}</code>.</div></li>
+        <li><div class="step-content">Click <strong>Insert Resource</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Retriever</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Custom Retriever</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge Article Version</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge Article Version Retriever</strong>.</div></li>
+        <li><div class="step-content">Click into the retriever.</div></li>
+        <li><div class="step-content">In the <strong>Search Text</strong> field on the left-hand side, click into the search bar.</div></li>
+        <li><div class="step-content">Select <strong>Free Text</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Query</strong>.</div></li>
+        <li><div class="step-content">Add <strong>Details</strong> as an Output Field.</div></li>
+        <li><div class="step-content">Add <strong>URL</strong> as an Output Field.</div></li>
+        <li><div class="step-content">Update <strong>Number of Results</strong> to <strong>20</strong>.</div></li>
+        <li><div class="step-content">Add any additional customization to tailor the prompt to your business.</div></li>
+        <li><div class="step-content">Test thoroughly in <strong>Prompt Builder</strong>.</div></li>
+        <li><div class="step-content">Confirm the results are accurate in Prompt Builder before moving on to the Agent Builder.</div></li>
+      </ol>
+    `
+  },
+
+  // ── APPENDIX C — EINSTEIN TRUST LAYER ──
+  {
+    sectionLabel: "Appendix C: Einstein Trust Layer Configuration",
+    sectionNum: "C",
+    title: "C.1 Zero Data Retention",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer ZDR
     track: "shared",
     subtitle: "Add a contractual guarantee that prompt and response data is not stored.",
@@ -1809,9 +1839,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
-    sectionNum: "B",
-    title: "B.2 Grounding Controls",
+    sectionLabel: "Appendix C: Einstein Trust Layer Configuration",
+    sectionNum: "C",
+    title: "C.2 Grounding Controls",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer grounding
     track: "shared",
     subtitle: "Restrict which data sources Einstein can access per agent.",
@@ -1828,19 +1858,19 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
-    sectionNum: "B",
-    title: "B.3 Data Masking",
+    sectionLabel: "Appendix C: Einstein Trust Layer Configuration",
+    sectionNum: "C",
+    title: "C.3 Data Masking",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer data masking
     track: "shared",
     subtitle: "Prevent sensitive field values from being sent to the LLM.",
     tag: "optional",
     tagLabel: "Advanced",
     body: `
-      <p class="section-intro">Data Masking prevents sensitive field values (e.g. SSNs, financial data) from being sent to the LLM in prompts. Use this section to add custom rules beyond the defaults set in Section 1.4.</p>
+      <p class="section-intro">Data Masking prevents sensitive field values (e.g. SSNs, financial data) from being sent to the LLM in prompts. Use this section to add custom rules beyond the defaults set in Section 1.1.</p>
       <ol class="steps">
         <li><div class="step-content">Go to <strong>Setup → Einstein Trust Layer → Data Masking</strong>.</div></li>
-        <li><div class="step-content">Confirm masking is enabled (set in Section 1.4).</div></li>
+        <li><div class="step-content">Confirm masking is enabled (set in Section 1.1).</div></li>
         <li><div class="step-content">To add custom masking rules, click <strong>New Masking Rule</strong>.</div></li>
         <li><div class="step-content">Specify the object, field, and masking pattern (e.g. mask all but last 4 digits of a phone number).</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
@@ -1848,9 +1878,9 @@ const cards = [
     `
   },
   {
-    sectionLabel: "Appendix B: Einstein Trust Layer Configuration",
-    sectionNum: "B",
-    title: "B.4 Audit Trail",
+    sectionLabel: "Appendix C: Einstein Trust Layer Configuration",
+    sectionNum: "C",
+    title: "C.4 Audit Trail",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Einstein Trust Layer audit trail
     track: "shared",
     subtitle: "Verify interaction logging is active and configure log exports.",
@@ -1907,12 +1937,12 @@ function render() {
     if (c.sectionLabel !== lastSection) {
       if (lastSection !== '') sidebarHTML += '</div>';
       const grpTrack = c.track || 'shared';
-      const isAppendix = ['A','B'].includes(c.sectionNum);
+      const isAppendix = ['A','B','C'].includes(c.sectionNum);
       sidebarHTML += `
         <div class="nav-section-group track-${grpTrack}" id="grp-${i}" data-track="${grpTrack}">
           <div class="nav-section-header">
             <div class="nav-section-num ${isAppendix ? 'appendix' : ''}">${c.sectionNum || '★'}</div>
-            <span>${c.sectionLabel.replace(/^(Section \d+: |Appendix [AB]: )/, '')}</span>
+            <span>${c.sectionLabel.replace(/^(Section \d+: |Appendix [ABC]: )/, '')}</span>
           </div>
       `;
       lastSection = c.sectionLabel;
@@ -1921,7 +1951,7 @@ function render() {
     sidebarHTML += `
       <div class="nav-item track-${c.track || 'shared'}${completionClass}" id="nav-${i}" onclick="goTo(${i})">
         <div class="nav-dot"></div>
-        <span>${c.title.replace(/^\d+\.\d+\s|^[AB]\.\d+\s/, '')}</span>
+        <span>${c.title.replace(/^\d+\.\d+\s|^[ABC]\.\d+\s/, '')}</span>
         <span class="nav-check" id="nav-check-${i}"></span>
       </div>
     `;
@@ -2167,6 +2197,14 @@ function fireConfetti() {
 
   // Use rootMargin so the "active" zone is the top third of the viewport.
   const observer = new IntersectionObserver(entries => {
+    // When the user is scrolled to the bottom of the document, the last card
+    // can't reach the top "active" zone — force it active.
+    const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollMax > 0 && window.scrollY >= scrollMax - 4) {
+      const lastCard = cardEls[cardEls.length - 1];
+      if (lastCard) setActive(lastCard.id.replace('card-', ''));
+      return;
+    }
     // Pick whichever observed card is closest to the top of the active zone.
     const visible = entries
       .filter(e => e.isIntersecting)
@@ -2178,6 +2216,16 @@ function fireConfetti() {
   }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
 
   cardEls.forEach(c => observer.observe(c));
+
+  // Also catch the bottom-of-document case from a plain scroll (when no
+  // intersection event fires) so the last card stays highlighted.
+  window.addEventListener('scroll', () => {
+    const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollMax > 0 && window.scrollY >= scrollMax - 4) {
+      const lastCard = cardEls[cardEls.length - 1];
+      if (lastCard) setActive(lastCard.id.replace('card-', ''));
+    }
+  }, { passive: true });
 })();
 
 // Fire confetti once per completion card on first reach
