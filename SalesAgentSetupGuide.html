@@ -1219,11 +1219,11 @@ const cards = [
     sectionLabel: "Section 0: Prerequisites & Org Checklist",
     sectionNum: "0",
     title: "0.1 Org Readiness Checklist",
-    subtitle: "Confirm licenses, org settings, permissions, and data quality before the workshop.",
+    subtitle: "Get your org ready! 🚀",
     track: "shared",
     trailhead: "https://trailhead.salesforce.com/", // TODO: Salesforce editions & licenses overview
     body: `
-      <p style="font-size: 16px; color: var(--sf-text); line-height: 1.65; margin-bottom: 24px;">To ensure you are able to successfully build and activate your Agentforce agent, complete the steps below before the workshop.</p>
+      <p style="font-size: 16px; color: var(--sf-text); line-height: 1.65; margin-bottom: 24px;">Before we start building, let's make sure your org is set up for success. Complete the checklist below before the workshop so you're ready to hit the ground running!</p>
       <a href="https://storm-58b581f9c0e9b8.my.salesforce-sites.com/activation/AAActivationWorkshopPrerequisites" target="_blank" rel="noopener" class="intro-cta" style="text-decoration: none; display: inline-flex; align-items: center;">Go to Prerequisites →</a>
     `
   },
@@ -1333,10 +1333,10 @@ const cards = [
       <div class="agent-overview">
         <div class="ao-left">
           <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Employee Agent</span></div></div>
-          <p>The Agentforce Employee Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
+          <p>The Agentforce Employee Agent template is <strong>a pre-built starting point for deploying internal-facing AI agents tailored to specific employee use cases</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
           <h3>Define the Description, Role, and Company</h3>
           <p>These inputs serve as the primary system prompt that <strong>grounds the <span class="tooltip" tabindex="0" data-tooltip="Salesforce's AI engine that decides which actions an agent takes for each user request.">Atlas Reasoning Engine<span class="tooltip-icon" aria-hidden="true">?</span></span> in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
-          <h3>Create the Agent User</h3>
+          <h3>Create the Employee Agent User</h3>
           <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
           <button class="ao-start-btn" onclick="goToFirstStep('employee')">Start Building →</button>
         </div>
@@ -1344,19 +1344,21 @@ const cards = [
           <h3>Lessons Learned</h3>
           <h4>Best Practices</h4>
           <ul>
+            <li>Optimize for productivity and policy adherence across internal tools.</li>
+            <li>Strong identity, permissions, and least-privilege access.</li>
+            <li>Emphasize "how-to" workflows (IT, HR, ops) with clear boundaries.</li>
             <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
             <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
-            <li>Ensure that you have granted the Agent access to the default data space.</li>
             <li>Enable enhanced event logs for visibility.</li>
             <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Employee Agents Overview</a></li>
             <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce for Employees</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
@@ -1460,10 +1462,10 @@ const cards = [
       <div class="agent-overview">
         <div class="ao-left">
           <div class="ao-template"><div class="ao-template-stack"><span class="ao-template-label">Template</span><span>Agentforce Sales Agent</span></div></div>
-          <p>The Agentforce Sales Agent template is a pre-configured autonomous Agent <strong>designed to handle high-volume customer inquiries 24/7</strong>. Start with this template to take advantage of out-of-the-box best practice capabilities that allow for rapid deployment and immediate case deflection while seamlessly escalating complex issues to human agents.</p>
+          <p>The Agentforce Sales Agent template is a pre-configured autonomous agent <strong>designed to handle high-volume sales activities across the full pipeline</strong>. A Sales Agent in Agentforce helps reps go from lead to close faster by answering questions (pipeline health, next-best accounts), pulling competitive intel, and speeding up account plans in Slack, CRM, or mobile.</p>
           <h3>Define the Description, Role, and Company</h3>
           <p>These inputs serve as the primary system prompt that <strong>grounds the Atlas Reasoning Engine in your specific business context and persona</strong>. Precise definitions reduce hallucinations and ensure the agent stays within its scope by explicitly guiding it on who it is representing and exactly what "jobs" it is authorized to perform.</p>
-          <h3>Create the Agent User</h3>
+          <h3>Create the Sales Agent User</h3>
           <p>The Agent user is <strong>a dedicated Salesforce User record</strong> representing the AI. It ensures security by enforcing the principle of least privilege, <strong>restricting the agent's access to only the specific data and actions necessary for its job</strong>, preventing unauthorized exposure of sensitive information.</p>
           <button class="ao-start-btn" onclick="goToFirstStep('sales')">Start Building →</button>
         </div>
@@ -1471,19 +1473,21 @@ const cards = [
           <h3>Lessons Learned</h3>
           <h4>Best Practices</h4>
           <ul>
+            <li>Optimize for speed-to-lead, next-best action, clean handoffs to humans.</li>
+            <li>Keep prompts grounded in CRM fields (accounts, opps, activity history).</li>
+            <li>Tight guardrails on outreach tone, approvals, and compliance.</li>
             <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
             <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
-            <li>Ensure that you have granted the Agent access to the default data space.</li>
             <li>Enable enhanced event logs for visibility.</li>
             <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">AI Sales Agent Resources</a></li>
             <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Sales Demos</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
@@ -1610,19 +1614,21 @@ const cards = [
           <h3>Lessons Learned</h3>
           <h4>Best Practices</h4>
           <ul>
+            <li>Optimize for accuracy, deflection, and safe resolution paths.</li>
+            <li>Strong retrieval from approved knowledge, clear escalation rules.</li>
+            <li>Auditability: cite sources, capture case notes, avoid hallucinations.</li>
             <li>Build one topic at a time. Test thoroughly before moving on to the next.</li>
             <li>Verify that the Agent's User has all of the necessary access including to Knowledge.</li>
-            <li>Ensure that you have granted the Agent access to the default data space.</li>
             <li>Enable enhanced event logs for visibility.</li>
-            <li>Test thoroughly in the builder before moving on to the Testing Center.</li>
+            <li>Test thoroughly in the builder.</li>
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Quick Start: Build a Service Agent with Agentforce</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">AI Customer Service Agents</a></li>
             <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder Basics</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The end to end Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Create a New Service Agent</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce for Service Demo</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
