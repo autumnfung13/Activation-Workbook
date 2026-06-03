@@ -821,6 +821,65 @@
       margin-bottom: 6px;
       line-height: 1;
     }
+    .preview-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.18s;
+    }
+    .preview-card-link:hover {
+      border-color: #0070D2;
+      background: #EEF4FB;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .preview-img-placeholder {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #E5E9F0 0%, #D6DEE8 100%);
+    }
+    .preview-img-placeholder .preview-emoji {
+      font-size: 56px;
+      margin: 0;
+    }
+    .preview-link-cta {
+      display: inline-block;
+      margin-top: 8px;
+      font-weight: 700;
+      color: #0070D2;
+    }
+    .preview-card-wide {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      text-align: left;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+    .preview-card-wide .preview-img-placeholder {
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
+      margin-bottom: 0;
+      border-radius: 8px;
+    }
+    .preview-card-wide .preview-img-placeholder .preview-emoji {
+      font-size: 32px;
+    }
+    .preview-card-wide-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .preview-card-wide-text p {
+      margin: 0;
+    }
+    .preview-card-wide-cta {
+      margin-top: 0;
+      margin-left: auto;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
 
     /* ── Tab bar ── */
     .tab-bar {
@@ -1190,6 +1249,16 @@ const cards = [
     body: `
       <p class="section-intro">This guide walks your team through the full setup for Agentforce agents, from org prerequisites through testing and deployment. Sections 0–1 are shared across all agents. After completing shared setup, you'll branch into the agent-specific track that fits your use case.</p>
       <div class="sub-label" style="margin-top:20px;">Agents You'll Build</div>
+      <a class="preview-card preview-card-link preview-card-wide" href="https://developer.salesforce.com/docs/data/agentforce-coworker/guide/agentforce-coworker-navigate-the-experience.html" target="_blank" rel="noopener">
+        <div class="preview-img preview-img-placeholder" aria-hidden="true">
+          <span class="preview-emoji">🤝</span>
+        </div>
+        <div class="preview-card-wide-text">
+          <h3>Agentforce Coworker</h3>
+          <p>Explore the standalone Coworker experience for everyday work.</p>
+        </div>
+        <span class="preview-link-cta preview-card-wide-cta">Learn more →</span>
+      </a>
       <div class="agent-chooser">
         <div class="preview-card">
           <img class="preview-img" src="Agent%20Images/Employee%20Agent.png" alt="Employee Agent — illustration of an internal assistant helping with HR and process questions" />
