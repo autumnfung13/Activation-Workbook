@@ -821,65 +821,6 @@
       margin-bottom: 6px;
       line-height: 1;
     }
-    .preview-card-link {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      cursor: pointer;
-      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.18s;
-    }
-    .preview-card-link:hover {
-      border-color: #0070D2;
-      background: #EEF4FB;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-    .preview-img-placeholder {
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #E5E9F0 0%, #D6DEE8 100%);
-    }
-    .preview-img-placeholder .preview-emoji {
-      font-size: 56px;
-      margin: 0;
-    }
-    .preview-link-cta {
-      display: inline-block;
-      margin-top: 8px;
-      font-weight: 700;
-      color: #0070D2;
-    }
-    .preview-card-wide {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      text-align: left;
-      padding: 16px 20px;
-      margin-top: 16px;
-    }
-    .preview-card-wide .preview-img-placeholder {
-      width: 64px;
-      height: 64px;
-      flex: 0 0 64px;
-      margin-bottom: 0;
-      border-radius: 8px;
-    }
-    .preview-card-wide .preview-img-placeholder .preview-emoji {
-      font-size: 32px;
-    }
-    .preview-card-wide-text {
-      flex: 1;
-      min-width: 0;
-    }
-    .preview-card-wide-text p {
-      margin: 0;
-    }
-    .preview-card-wide-cta {
-      margin-top: 0;
-      margin-left: auto;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
 
     /* ── Tab bar ── */
     .tab-bar {
@@ -1249,16 +1190,6 @@ const cards = [
     body: `
       <p class="section-intro">This guide walks your team through the full setup for Agentforce agents, from org prerequisites through testing and deployment. Sections 0–1 are shared across all agents. After completing shared setup, you'll branch into the agent-specific track that fits your use case.</p>
       <div class="sub-label" style="margin-top:20px;">Agents You'll Build</div>
-      <a class="preview-card preview-card-link preview-card-wide" href="https://developer.salesforce.com/docs/data/agentforce-coworker/guide/agentforce-coworker-navigate-the-experience.html" target="_blank" rel="noopener">
-        <div class="preview-img preview-img-placeholder" aria-hidden="true">
-          <span class="preview-emoji">🤝</span>
-        </div>
-        <div class="preview-card-wide-text">
-          <h3>Agentforce Coworker</h3>
-          <p>Explore the standalone Coworker experience for everyday work.</p>
-        </div>
-        <span class="preview-link-cta preview-card-wide-cta">Learn more →</span>
-      </a>
       <div class="agent-chooser">
         <div class="preview-card">
           <img class="preview-img" src="Agent%20Images/Employee%20Agent.png" alt="Employee Agent — illustration of an internal assistant helping with HR and process questions" />
@@ -1423,11 +1354,11 @@ const cards = [
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Employee Agents Overview</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce for Employees</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/agentforce-for-employees/employee-agents/" target="_blank" rel="noopener">Employee Agents Overview</a></li>
+            <li><a href="https://trailhead.salesforce.com/content/learn/modules/agentforce-agent-planning" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/agentforce-for-employees/" target="_blank" rel="noopener">Agentforce for Employees</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/guide/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/agent-builder/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
@@ -1496,6 +1427,36 @@ const cards = [
   },
   {
     sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
+    title: "3.4 Grant Access To Users",
+    subtitle: "Create a permission set that grants access to the Employee Agent and assign it to users.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Set / Agent Access
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">In <strong>Setup</strong>, search <strong>Permission Sets</strong>.</div></li>
+        <li><div class="step-content">Click <strong>New</strong>.</div></li>
+        <li><div class="step-content">For <strong>Label</strong>, add <code>Grant Employee Access</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Grant Employee Access')">Copy</button>.</div></li>
+        <li><div class="step-content">For <strong>API name</strong>, <code>Grant_Employee_Access</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Grant_Employee_Access')">Copy</button> autopopulates.</div></li>
+        <li><div class="step-content">For <strong>Description</strong>, add <code>This grants access to the active Agentforce for employee agents</code><button type="button" class="copy-inline" onclick="copyInline(this, 'This grants access to the active Agentforce for employee agents')">Copy</button>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Scroll down, find &amp; click <strong>Agent Access</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Edit</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Employee Agent</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">A confirmation screen that states <strong>Your selections were saved.</strong> will appear, click <strong>Ok</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Manage Assignments</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Add Assignment</strong>.</div></li>
+        <li><div class="step-content">Search and find your name.</div></li>
+        <li><div class="step-content">Check off the box next to your name.</div></li>
+        <li><div class="step-content">Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Assign</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Done</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
     sectionNum: "★",
     title: "🎉 You've Built Your Employee Agent!",
     subtitle: "Every step in the Employee track is checked off. Here's what to do next.",
@@ -1552,11 +1513,11 @@ const cards = [
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">AI Sales Agent Resources</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Sales Demos</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
+            <li><a href="https://www.salesforce.com/sales/ai-sales-agent/resources/" target="_blank" rel="noopener">AI Sales Agent Resources</a></li>
+            <li><a href="https://trailhead.salesforce.com/content/learn/modules/agentforce-agent-planning" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://www.salesforce.com/sales/demos/agentforce-sales-demos/" target="_blank" rel="noopener">Agentforce Sales Demos</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/guide/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/agent-builder/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
@@ -1595,10 +1556,6 @@ const cards = [
         <li><div class="step-content">Click <strong>Edit</strong>.</div></li>
         <li><div class="step-content">Search <strong>Record Research</strong> in the left-hand components search bar.</div></li>
         <li><div class="step-content">Drag &amp; drop <strong>Record Research</strong> to the account page.</div></li>
-        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Activation…</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Remove as Org Default</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Desktop &amp; Phone</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save</strong>.</div></li>
         <li><div class="step-content">Click <strong>Activation…</strong>.</div></li>
         <li><div class="step-content">Click <strong>Assign as Org Default</strong>.</div></li>
@@ -1693,11 +1650,11 @@ const cards = [
           </ul>
           <h4>Important Resources &amp; Documentation</h4>
           <ul>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">AI Customer Service Agents</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce for Service Demo</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
-            <li><a href="https://trailhead.salesforce.com/" target="_blank" rel="noopener">Agentforce Builder</a></li>
+            <li><a href="https://www.salesforce.com/service/ai/customer-service-agents/" target="_blank" rel="noopener">AI Customer Service Agents</a></li>
+            <li><a href="https://trailhead.salesforce.com/content/learn/modules/agentforce-agent-planning" target="_blank" rel="noopener">Agentforce: Agent Planning</a></li>
+            <li><a href="https://www.salesforce.com/service/demos/agentforce-for-service/" target="_blank" rel="noopener">Agentforce for Service Demo</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/guide/" target="_blank" rel="noopener">The End to End Agentforce Guide</a></li>
+            <li><a href="https://www.salesforce.com/agentforce/agent-builder/" target="_blank" rel="noopener">Agentforce Builder</a></li>
           </ul>
         </div>
       </div>
@@ -1720,6 +1677,40 @@ const cards = [
         <li><div class="step-content">For <strong>Developer Name</strong>, <code>Service_Agent</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Service_Agent')">Copy</button> autopopulates.</div></li>
         <li><div class="step-content">Confirm the user record assigned is <strong>New User</strong>.</div></li>
         <li><div class="step-content">Click <strong>Let's Go</strong>.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 5: Service Agent — Customer Support",
+    sectionNum: "5",
+    title: "5.3 Update Permissions",
+    subtitle: "Grant Knowledge access to the Service Agent permission set and Einstein Agent User profile.",
+    track: "service",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Permission Sets / Knowledge access
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Go to <strong>Setup</strong>, search and select <strong>Permission Sets</strong>.</div></li>
+        <li><div class="step-content">Scroll, search &amp; select <strong>Agentforce Agent Service_Agent</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Object Settings</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Knowledge</strong>, the API name should be <strong>knowledge__kav</strong>.</div></li>
+        <li><div class="step-content">Confirm <strong>Read</strong> access is <strong>enabled</strong> under <strong>Object Permissions</strong>.</div></li>
+        <li><div class="step-content">If not, click <strong>Edit</strong> and check off the box next to <strong>Read</strong> access. Then click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Permission Set Overview</strong>.</div></li>
+        <li><div class="step-content">Click <strong>App Permissions</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Edit</strong>.</div></li>
+        <li><div class="step-content">Scroll and find <strong>Knowledge Management</strong> section.</div></li>
+        <li><div class="step-content">Check the box next to <strong>Allow View Knowledge</strong> to enable access.</div></li>
+        <li><div class="step-content">Some orgs also require <strong>Access Conversational Entries</strong> — scroll to the top of the list.</div></li>
+        <li><div class="step-content">Check the box next to <strong>Allow conversational Entries</strong> to enable access.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">A confirmation screen will appear, click <strong>Save</strong> again.</div></li>
+        <li><div class="step-content">Go to <strong>Setup</strong>, search and select <strong>Profiles</strong>.</div></li>
+        <li><div class="step-content">Select <strong>Einstein Agent User</strong> profile.</div></li>
+        <li><div class="step-content">Click <strong>Data Category Visibility</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Edit</strong> next to <strong>Audience</strong>.</div></li>
+        <li><div class="step-content">Set visibility to <strong>All Categories</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Save</strong>.</div></li>
+        <li><div class="step-content">Repeat the previous steps for <strong>Inquiry Type</strong> and <strong>Product</strong>.</div></li>
       </ol>
     `
   },
