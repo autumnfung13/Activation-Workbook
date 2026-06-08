@@ -1457,6 +1457,26 @@ const cards = [
   },
   {
     sectionLabel: "Section 3: Internal Employee-Facing Agent",
+    sectionNum: "3",
+    title: "3.5 Use The Employee Agent",
+    subtitle: "Run an end-to-end test: look up a contact, generate and send an event invite email.",
+    track: "employee",
+    trailhead: "https://trailhead.salesforce.com/", // TODO: Use the Employee Agent
+    body: `
+      <ol class="steps">
+        <li><div class="step-content">Search for <strong>Sales</strong> in App Launcher.</div></li>
+        <li><div class="step-content">Click the <strong>Agentforce</strong> icon.</div></li>
+        <li><div class="step-content">Type in chat: <code>Tell me about xxxx (find a contact name) and include a clickable link to the contact record, and ensure the link isn't just a text.</code><button type="button" class="copy-inline" onclick="copyInline(this, &quot;Tell me about xxxx (find a contact name) and include a clickable link to the contact record, and ensure the link isn't just a text.&quot;)">Copy</button>.</div></li>
+        <li><div class="step-content">Once the link is provided, click into it.</div></li>
+        <li><div class="step-content">Type in chat: <code>Generate an email inviting contact name on a Agentforce event in two weeks, use Agentforce Event in June as the subject line and do not ask for additional details.</code><button type="button" class="copy-inline" onclick="copyInline(this, 'Generate an email inviting contact name on a Agentforce event in two weeks, use Agentforce Event in June as the subject line and do not ask for additional details.')">Copy</button>.</div></li>
+        <li><div class="step-content">Read over the email and click on <strong>Send Email</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Send</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Activity</strong> on the contact record to view the email you just sent.</div></li>
+      </ol>
+    `
+  },
+  {
+    sectionLabel: "Section 3: Internal Employee-Facing Agent",
     sectionNum: "★",
     title: "🎉 You've Built Your Employee Agent!",
     subtitle: "Every step in the Employee track is checked off. Here's what to do next.",
@@ -1535,10 +1555,27 @@ const cards = [
         <li><div class="step-content">Go to <strong>Setup</strong>, search <strong>Agentforce Account Management</strong>.</div></li>
         <li><div class="step-content">Turn on <strong>Account Management</strong>.</div></li>
         <li><div class="step-content">A confirmation screen will appear, click <strong>Confirm</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Finish Configuring Account Plans</strong>.</div></li>
         <li><div class="step-content">Click <strong>Turn on Account Research</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Set Up Einstein Conversation Insights</strong>.</div></li>
-        <li><div class="step-content">Click <strong>Set Up Einstein Activity Capture</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Go to Setup</strong> next to <strong>Finish Configuring Account Plans</strong>. A new tab will open.</div></li>
+        <li><div class="step-content">Toggle over and turn on <strong>Switch on Sales Account Plans</strong>.</div></li>
+        <li><div class="step-content">Return to the tab you turned on <strong>Account Management</strong>.</div></li>
+        <li><div class="step-content">Mark <strong>Finish Configuring Account Plans</strong> as done.</div></li>
+        <li><div class="step-content">Click <strong>Go to Setup</strong> next to <strong>Set Up Einstein Conversation Insights</strong>. A new tab will open.</div></li>
+        <li><div class="step-content">Click <strong>Enable ECI</strong>.</div></li>
+        <li><div class="step-content">Return to the tab you turned on <strong>Account Management</strong>.</div></li>
+        <li><div class="step-content">Mark <strong>Set Up Einstein Conversation Insights</strong> as done.</div></li>
+        <li><div class="step-content">Click <strong>Go to Setup</strong> next to <strong>Set Up Einstein Activity Capture</strong>. A new tab will open.</div></li>
+        <li><div class="step-content">Click <strong>Get Started</strong>.</div></li>
+        <li><div class="step-content">Click the email / calendar service you use from the options. Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Click <strong>User Level</strong>. Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Write your name. Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Disable any options you want to restrict access to. If none, leave as is and click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Review the <strong>Advanced Settings</strong>. Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Select your name from the <strong>Available</strong> section, and move it to <strong>Selected</strong> using the arrows.</div></li>
+        <li><div class="step-content">Review the <strong>Exclude Addresses</strong> section. Click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Click <strong>Finish</strong>.</div></li>
+        <li><div class="step-content">Return to the tab you turned on <strong>Account Management</strong>.</div></li>
+        <li><div class="step-content">Mark <strong>Set Up Einstein Activity Capture</strong> as done.</div></li>
       </ol>
     `
   },
@@ -1864,7 +1901,7 @@ const cards = [
         <li><div class="step-content">Open <strong>Answer Questions with Knowledge</strong>.</div></li>
         <li><div class="step-content">Click <strong>Deactivate</strong>.</div></li>
         <li><div class="step-content">Click <strong>Save As New Version</strong>.</div></li>
-        <li><div class="step-content">Under the <strong>KNOWLEDGE</strong> heading, remove <code>{!$EinsteinSearch:sfdc_ai__DynamicRetriever.results}</code>.</div></li>
+        <li><div class="step-content">Under the <strong>KNOWLEDGE</strong> heading, remove <code>Retrievers:Dynamic Retriever</code>.</div></li>
         <li><div class="step-content">Click <strong>Insert Resource</strong>.</div></li>
         <li><div class="step-content">Select <strong>Retriever</strong>.</div></li>
         <li><div class="step-content">Select <strong>Custom Retriever</strong>.</div></li>
